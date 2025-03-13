@@ -26,3 +26,10 @@ export enum Suit {
     RED,
     BLACK
   }
+
+  export enum PileType {
+    STOCK,
+    WASTE,
+    FOUNDATION,
+    TABLEAU
+  }
