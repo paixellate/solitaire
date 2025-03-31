@@ -3,7 +3,7 @@ import { createCardMesh } from "../mesh";
 import { MaterialManager } from "../texture";
 import { Rank, RANKS } from "./rank";
 import { Suit, SUITS } from "./suit";
-import * as THREE from 'three';
+import * as THREE from "three";
 
 export class Card {
     private readonly group: THREE.Group;
@@ -14,8 +14,8 @@ export class Card {
         public readonly suit: Suit,
         public readonly width: number,
         public readonly height: number,
-        public position: { x: number, y: number, z: number },
-        public isFaceUp: boolean = false,
+        public position: { x: number; y: number; z: number },
+        public isFaceUp: boolean = false
     ) {
         this.positioning = new THREE.Object3D();
         this.positioning.position.set(this.position.x, this.position.y, this.position.z);

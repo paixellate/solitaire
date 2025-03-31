@@ -57,10 +57,10 @@ export class MaterialManager {
     public getMaterial(rank: Rank, suit: Suit, width: number, height: number): THREE.Material {
         let material = this.materials.get(rank + suit);
         if (!material) {
-            material = new THREE.MeshStandardMaterial({ 
+            material = new THREE.MeshStandardMaterial({
                 color: 0xffffff,
                 side: THREE.DoubleSide,
-                map: TextureManager.getInstance().loadCardTexture(rank, suit, width, height)
+                map: TextureManager.getInstance().loadCardTexture(rank, suit, width, height),
             });
             this.materials.set(rank + suit, material);
             material = this.materials.get(rank + suit);
@@ -77,7 +77,7 @@ export class MaterialManager {
             material = new THREE.MeshStandardMaterial({
                 color: 0xffffff,
                 side: THREE.DoubleSide,
-                map: TextureManager.getInstance().loadCardBackTexture(width, height)
+                map: TextureManager.getInstance().loadCardBackTexture(width, height),
             });
             this.materials.set("back", material);
             material = this.materials.get("back");

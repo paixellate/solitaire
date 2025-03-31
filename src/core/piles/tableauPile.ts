@@ -5,7 +5,7 @@ import { PileType } from "./pileType";
 import { isOppositeColor } from "../suit";
 
 export class TableauPile extends Pile {
-    constructor(index: number, width: number, height: number, position: { x: number, y: number, z: number }) {
+    constructor(index: number, width: number, height: number, position: { x: number; y: number; z: number }) {
         super(index, PileType.TABLEAU, width, height, position);
     }
 

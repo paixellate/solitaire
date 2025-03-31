@@ -1,6 +1,5 @@
 import * as THREE from "three";
 
-
 export type vec2 = THREE.Vector2;
 export type vec3 = THREE.Vector3;
 

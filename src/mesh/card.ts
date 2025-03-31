@@ -1,11 +1,6 @@
 import * as THREE from "three";
 
-export function createCardMesh (
-    width: number,
-    height: number,
-    frontMaterial: THREE.Material,
-    backMaterial: THREE.Material) {
-
+export function createCardMesh(width: number, height: number, frontMaterial: THREE.Material, backMaterial: THREE.Material) {
     // Create a rectangular plane with different materials for front and back
     const planeGeometry = new THREE.PlaneGeometry(width, height);
     backMaterial.side = THREE.BackSide;

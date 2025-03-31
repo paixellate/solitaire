@@ -1,25 +1,20 @@
 export enum Suit {
-    HEARTS = '♥',
-    DIAMONDS = '♦',
-    CLUBS = '♣',
-    SPADES = '♠'
+    HEARTS = "♥",
+    DIAMONDS = "♦",
+    CLUBS = "♣",
+    SPADES = "♠",
 }
 
-export const SUITS = [
-    Suit.HEARTS,
-    Suit.DIAMONDS,
-    Suit.CLUBS,
-    Suit.SPADES
-];
+export const SUITS = [Suit.HEARTS, Suit.DIAMONDS, Suit.CLUBS, Suit.SPADES];
 
-export function getSuitColor(suit: Suit): 'red' | 'black' {
+export function getSuitColor(suit: Suit): "red" | "black" {
     switch (suit) {
         case Suit.HEARTS:
         case Suit.DIAMONDS:
-            return 'red';
+            return "red";
         case Suit.CLUBS:
         case Suit.SPADES:
-            return 'black';
+            return "black";
     }
 }
 
@@ -29,9 +24,13 @@ export function isOppositeColor(suit1: Suit, suit2: Suit): boolean {
 
 export function getSuitName(suit: Suit): string {
     switch (suit) {
-        case Suit.HEARTS: return 'hearts';
-        case Suit.DIAMONDS: return 'diamonds';
-        case Suit.CLUBS: return 'clubs';
-        case Suit.SPADES: return 'spades';
+        case Suit.HEARTS:
+            return "hearts";
+        case Suit.DIAMONDS:
+            return "diamonds";
+        case Suit.CLUBS:
+            return "clubs";
+        case Suit.SPADES:
+            return "spades";
     }
 }

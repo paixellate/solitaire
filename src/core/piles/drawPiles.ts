@@ -4,6 +4,7 @@ import { Suit } from "../suit";
 import { Pile } from "./pile";
 import { PileType } from "./pileType";
 import * as THREE from "three";
+
 export class DrawPiles {
     private readonly stockPile: Pile;
     private readonly wastePile: Pile;
@@ -13,11 +14,15 @@ export class DrawPiles {
         wasteIndex: number,
         width: number,
         height: number,
-        position: { x: number, y: number, z: number },
-        wasteOffset: { x: number, y: number }
+        position: { x: number; y: number; z: number },
+        wasteOffset: { x: number; y: number }
     ) {
         this.stockPile = new Pile(stockIndex, PileType.STOCK, width, height, position);
-        this.wastePile = new Pile(wasteIndex, PileType.WASTE, width, height, { x: position.x + wasteOffset.x, y: position.y + wasteOffset.y, z: position.z });
+        this.wastePile = new Pile(wasteIndex, PileType.WASTE, width, height, {
+            x: position.x + wasteOffset.x,
+            y: position.y + wasteOffset.y,
+            z: position.z,
+        });
         this.addDeckToStock();
     }
 

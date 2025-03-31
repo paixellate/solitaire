@@ -5,7 +5,7 @@ import { PileType } from "./pileType";
 import { isOppositeColor } from "../suit";
 
 export class FoundationPile extends Pile {
-    constructor(index: number, width: number, height: number, position: { x: number, y: number, z: number }) {
+    constructor(index: number, width: number, height: number, position: { x: number; y: number; z: number }) {
         super(index, PileType.FOUNDATION, width, height, position);
     }
 
@@ -13,7 +13,7 @@ export class FoundationPile extends Pile {
         const topCard = this.getTopCard();
         if (topCard) {
             const isOneRankAbove = getRankValue(card.rank) - getRankValue(topCard.rank) === 1;
-            const isSameSuit = (card.suit === topCard.suit);
+            const isSameSuit = card.suit === topCard.suit;
             return isOneRankAbove && isSameSuit;
         } else {
             return card.rank === Rank.ACE;

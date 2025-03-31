@@ -1,10 +1,8 @@
 import { createPileMesh } from "../../mesh/pile";
-import * as THREE from 'three';
+import * as THREE from "three";
 import { PileType } from "./pileType";
 import { Card } from "../card";
-import { Vector3 } from "three";
 import { vec3 } from "../../vector";
-import { TEXT_OFFSET_MULTIPLIER } from "../../texture/card";
 
 export class Pile {
     private readonly mesh: THREE.Mesh;
@@ -15,7 +13,7 @@ export class Pile {
         public readonly type: PileType,
         public readonly width: number,
         public readonly height: number,
-        public readonly position: { x: number, y: number, z: number }
+        public readonly position: { x: number; y: number; z: number }
     ) {
         const material = new THREE.MeshStandardMaterial({ color: 0x00aa00 });
 
@@ -31,7 +29,7 @@ export class Pile {
         scene.remove(this.mesh);
     }
 
-    public addCard(card: Card, offsetMultiplier: { x: number, y: number }): void {
+    public addCard(card: Card, offsetMultiplier: { x: number; y: number }): void {
         const topCard = this.getTopCard();
         if (topCard) {
             const p = vec3(this.width * offsetMultiplier.x, this.height * offsetMultiplier.y, 1);
