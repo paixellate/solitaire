@@ -1,29 +1,21 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Solitaire</title>
     <style>
-      body { 
-          margin: 0; 
-          overflow: auto;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
-      canvas { 
-          display: block; 
-          width: 70%; 
-          aspect-ratio: 16/9;
-          min-width: 640px;
-          min-height: 360px;
-      }
-  </style>
-</head>
-<body>
-    <h1>Solitaire</h1>
-    <canvas id="glCanvas"></canvas>
+    </style>
+  </head>
+  <body>
     <script type="module" src="/src/main.ts"></script>
-</body>
+  </body>
 </html>

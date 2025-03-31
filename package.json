@@ -17,5 +17,9 @@
     "typescript": "^5.8.2",
     "vite": "^6.2.1",
     "vitest": "^3.0.8"
+  },
+  "dependencies": {
+    "@types/three": "^0.174.0",
+    "three": "^0.174.0"
   }
 }
