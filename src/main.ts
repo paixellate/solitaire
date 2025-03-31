@@ -2,6 +2,29 @@ import * as THREE from "three";
 import { Pile } from "./core/piles/pile";
 import { PileType } from "./core/piles/pileType";
 import { DrawPiles } from "./core/piles/drawPiles";
+
+// Mouse state tracking
+const mouse = {
+    position: new THREE.Vector2(),
+    isDown: false
+};
+
+// Setup mouse event listeners
+window.addEventListener('mousemove', (event) => {
+    // (0 to window.innerWidth)
+    mouse.position.x = event.clientX - window.innerWidth / 2;
+    mouse.position.y = -(event.clientY - window.innerHeight / 2);
+});
+
+window.addEventListener('mousedown', () => {
+    mouse.isDown = true;
+});
+
+window.addEventListener('mouseup', () => {
+    mouse.isDown = false;
+});
+
+
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -46,9 +69,11 @@ for (let i = 0; i < 7; i++) {
 
 tableauPiles.forEach((pile) => pile.getTopCard()?.makeFaceUp());
 
+
 function animate() {
     requestAnimationFrame(animate);
-    // Rotate the plane to show front and back
+
+    // Render the scene
     renderer.render(scene, camera);
 }
 
