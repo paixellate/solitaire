@@ -4,6 +4,7 @@ import { MaterialManager } from "../texture";
 import { Rank, RANKS } from "./rank";
 import { Suit, SUITS } from "./suit";
 import * as THREE from "three";
+import { isMouseOverBox } from "../mesh/collision";
 
 export class Card {
     private readonly group: THREE.Group;
@@ -14,11 +15,11 @@ export class Card {
         public readonly suit: Suit,
         public readonly width: number,
         public readonly height: number,
-        public position: { x: number; y: number; z: number },
+        position: THREE.Vector3,
         public isFaceUp: boolean = false
     ) {
         this.positioning = new THREE.Object3D();
-        this.positioning.position.set(this.position.x, this.position.y, this.position.z);
+        this.positioning.position.copy(position);
 
         const backMaterial = MaterialManager.getInstance().getCardBackMaterial(this.width, this.height);
         const cardTexture = MaterialManager.getInstance().getMaterial(this.rank, this.suit, this.width, this.height);
@@ -27,6 +28,12 @@ export class Card {
         this.group.rotation.y = Math.PI;
 
         this.positioning.add(this.group);
+    }
+
+    public getGlobalPosition(): THREE.Vector3 {
+        let position = new THREE.Vector3();
+        this.positioning.getWorldPosition(position);
+        return position;
     }
 
     private getPosition(): THREE.Vector3 {
@@ -39,6 +46,11 @@ export class Card {
 
     private setRotation(yRotation: number): void {
         this.group.rotation.y = yRotation;
+    }
+
+    public isMouseOver(mousePosition: THREE.Vector2): boolean {
+        const box = new THREE.Box3().setFromCenterAndSize(this.getGlobalPosition(), vec3(this.width, this.height, 0));
+        return isMouseOverBox(mousePosition, box);
     }
 
     public makeFaceUp(): void {
@@ -66,7 +78,6 @@ export class Card {
 
     public removeFromMesh(mesh: THREE.Mesh): void {
         mesh.remove(this.positioning);
-        this.setPosition(vec3(this.position.x, this.position.y, this.position.z));
     }
 
     public addToCard(card: Card, positionOffset: THREE.Vector3): void {
@@ -76,6 +87,5 @@ export class Card {
 
     public removeFromCard(card: Card): void {
         card.positioning.remove(this.positioning);
-        this.setPosition(vec3(this.position.x, this.position.y, this.position.z));
     }
 }
