@@ -1,9 +1,9 @@
 import { Pile } from "./pile";
 import { vec2, vec3 } from "../../vector";
-import { Selection, Selections } from "../rules/selection";
+import { Selections } from "../rules/selection";
 
 export class SelectionPile extends Pile {
-    private selection: Selection | Selections | null;
+    private selection: Selections | null;
     private initialMousePosition: vec2 | null = null;
     private mousePositionOffset: vec2 | null = null;
 
@@ -24,19 +24,19 @@ export class SelectionPile extends Pile {
         }
     }
 
-    public setSelection(selection: Selection | Selections | null): void {
+    public setSelection(selection: Selections | null): void {
         this.selection = selection;
         if (this.selection) {
-            if (this.selection instanceof Selections) {
-                this.addCards(this.selection.cards);
-            } else {
-                this.addCard(this.selection.card);
-            }
+            this.addCards(this.selection.cards);
             this.setSelectionCardPosition(this.selection.mousePosition, this.selection.cardPosition);
         }
     }
 
-    public getSelection(): Selection | Selections | null {
+    public popSelectedCards(mousePosition: vec2): Selections | null {
+        throw new Error("SelectionPile does not support popSelectedCards");
+    }
+
+    public getSelection(): Selections | null {
         return this.selection;
     }
 

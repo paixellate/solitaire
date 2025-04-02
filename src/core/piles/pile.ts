@@ -3,8 +3,10 @@ import * as THREE from "three";
 import { Card } from "../cards/card";
 import { vec2, vec3 } from "../../vector";
 import { isMouseOverBox } from "../../mesh/collision";
+import { Selections } from "../rules/selection";
 
 export abstract class Pile {
+    private readonly name: string = this.constructor.name;
     private readonly mesh: THREE.Mesh;
     private readonly cards: Card[] = [];
 
@@ -27,7 +29,7 @@ export abstract class Pile {
         this.mesh.geometry.computeBoundingBox();
     }
 
-    protected getGlobalPosition(): vec3 {
+    public getGlobalPosition(): vec3 {
         let position = vec3(0, 0, 0);
         this.mesh.getWorldPosition(position);
         return position;
@@ -174,4 +176,6 @@ export abstract class Pile {
         }
         return cards;
     }
+
+    public abstract popSelectedCards(mousePosition: vec2): Selections | null;
 }

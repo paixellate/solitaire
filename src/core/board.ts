@@ -5,14 +5,35 @@ import { WastePile } from "./piles/wastePile";
 import { StockPile } from "./piles/stockPile";
 import { FoundationPile } from "./piles/foundationPile";
 import { Deck } from "./cards/deck";
+import * as THREE from "three";
 
 export class Board {
+    public readonly wastePile: WastePile;
+    public readonly stockPile: StockPile;
+    public readonly tableauPiles: TableauPile[];
+    public readonly foundationPiles: FoundationPile[];
+
+    constructor() {
+        this.wastePile = this.createWastePile();
+        this.stockPile = this.createStockPile(this.wastePile);
+        this.tableauPiles = this.createTableauPiles();
+        this.foundationPiles = this.createFoundationPiles();
+        this.dealCards(this.createDeck(), this.stockPile, this.tableauPiles);
+    }
+
+    public addToScene(scene: THREE.Scene): void {
+        this.wastePile.addToScene(scene);
+        this.stockPile.addToScene(scene);
+        this.tableauPiles.forEach((pile) => pile.addToScene(scene));
+        this.foundationPiles.forEach((pile) => pile.addToScene(scene));
+    }
+
     public createSelectionPile(): SelectionPile {
         return new SelectionPile(0, 100, 140, vec3(0, 0, -10000), vec2(0, -0.2), vec2(0.001, -0.001));
     }
 
-    public createStockPile(): StockPile {
-        return new StockPile(1, 100, 140, vec3(450, 200, -100), vec2(0, -0.2), vec2(0.001, -0.001));
+    public createStockPile(wastePile: WastePile): StockPile {
+        return new StockPile(1, 100, 140, vec3(450, 200, -100), vec2(0, -0.2), vec2(0.001, -0.001), wastePile);
     }
 
     public createWastePile(): WastePile {

@@ -7,6 +7,7 @@ import * as THREE from "three";
 import { isMouseOverBox } from "../../mesh/collision";
 
 export class Card {
+    private readonly name: string;
     private readonly group: THREE.Group;
     private readonly positioning: THREE.Object3D;
     public readonly rank: Rank;
@@ -20,6 +21,7 @@ export class Card {
         this.suit = suit;
         this.width = width;
         this.height = height;
+        this.name = `${rank} of ${suit}`;
 
         this.positioning = new THREE.Object3D();
         this.positioning.position.copy(position);

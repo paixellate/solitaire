@@ -1,28 +1,33 @@
+import { vec2 } from "../../vector";
+import { Board } from "../board";
+import { FoundationPile } from "../piles/foundationPile";
 import { Pile } from "../piles/pile";
+import { StockPile } from "../piles/stockPile";
 import { TableauPile } from "../piles/tableauPile";
 import { WastePile } from "../piles/wastePile";
-import { Selections, Selection } from "./selection";
+import { Selections } from "./selection";
 
 export class Move {
-    private readonly selection: Selection | Selections;
+    private readonly selection: Selections;
     private readonly destination: Pile;
     private isExecuted: boolean = false;
 
-    constructor(selection: Selection | Selections, destination: Pile) {
+    constructor(selection: Selections, destination: Pile) {
         this.selection = selection;
         this.destination = destination;
     }
 
     public execute() {
-        if (this.selection instanceof Selection) {
-            if (this.destination instanceof WastePile) {
-                this.selection.card.makeFaceUp();
-            }
+        console.log("executing move");
+        console.log(this.selection.cards);
+        console.log(this.selection.source);
+        console.log(this.destination);
 
-            this.destination.addCard(this.selection.card);
-        } else {
-            this.destination.addCards(this.selection.cards);
+        if (this.destination instanceof WastePile) {
+            this.selection.cards.forEach((card) => card.makeFaceUp());
         }
+
+        this.destination.addCards(this.selection.cards);
 
         if (this.selection.source instanceof TableauPile) {
             if (!this.selection.source.isEmpty()) {
@@ -33,27 +38,37 @@ export class Move {
         this.isExecuted = true;
     }
 
-    public undo() {
-        if (this.selection.source instanceof TableauPile) {
-            if (!this.selection.source.isEmpty()) {
-                this.selection.source.getTopCardOrThrow().makeFaceDown();
-            }
-        }
+    public static create(selection: Selections, mousePosition: vec2, board: Board): Move {
+        const isAuto = selection.source.isMouseOver(mousePosition);
 
-        if (this.selection instanceof Selection) {
-            if (this.destination instanceof WastePile) {
-                this.selection.card.makeFaceDown();
+        if (selection.isSingleCard()) {
+            if (selection.source instanceof StockPile && (isAuto || board.wastePile.isMouseOver(mousePosition))) {
+                return new Move(selection, board.wastePile);
             }
 
-            this.destination.popCardOrThrow();
-            this.selection.source.addCard(this.selection.card);
+            if (!(selection.source instanceof FoundationPile)) {
+                for (const foundationPile of board.foundationPiles) {
+                    if (foundationPile.canAddCard(selection.cards[0]) && (isAuto || foundationPile.isMouseOver(mousePosition))) {
+                        return new Move(selection, foundationPile);
+                    }
+                }
+            }
         } else {
-            for (let i = this.selection.cards.length - 1; i >= 0; i--) {
-                this.destination.popCardOrThrow();
-                this.selection.source.addCard(this.selection.cards[i]);
+            if (selection.source instanceof WastePile && (isAuto || board.stockPile.isMouseOver(mousePosition))) {
+                return new Move(selection, board.stockPile);
             }
         }
 
-        this.isExecuted = false;
+        for (const tableauPile of board.tableauPiles) {
+            if (tableauPile === selection.source) {
+                continue;
+            }
+
+            if (tableauPile.canAddCard(selection.getBottomCard()) && (isAuto || tableauPile.isMouseOver(mousePosition))) {
+                return new Move(selection, tableauPile);
+            }
+        }
+
+        return new Move(selection, selection.source);
     }
 }
