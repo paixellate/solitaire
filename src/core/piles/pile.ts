@@ -33,7 +33,7 @@ export abstract class Pile {
         return position;
     }
 
-    protected getTopCardGlobalPosition(): vec3 {
+    public getTopCardGlobalPosition(): vec3 {
         const topCard = this.getTopCard();
         if (topCard) {
             return topCard.getGlobalPosition();
@@ -132,17 +132,11 @@ export abstract class Pile {
 
     public popCard(): Card | null {
         const card = this.cards.pop() ?? null;
-        if (card) {
-            card.removeFromMesh(this.mesh);
-        }
-        return card;
-    }
-
-    public popCardOrThrow(): Card {
-        const card = this.popCard();
         if (!card) {
-            throw new Error("No card to pop");
-        } else if (this.cards.length === 0) {
+            return null;
+        }
+
+        if (this.cards.length === 0) {
             card.removeFromMesh(this.mesh);
             return card;
         } else {
@@ -150,6 +144,14 @@ export abstract class Pile {
             card.removeFromCard(topCard);
             return card;
         }
+    }
+
+    public popCardOrThrow(): Card {
+        const card = this.popCard();
+        if (!card) {
+            throw new Error("No card to pop");
+        }
+        return card;
     }
 
     public popCardsTill(card: Card): Card[] {

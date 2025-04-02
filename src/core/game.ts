@@ -1,12 +1,13 @@
+import * as THREE from "three";
 import { Input } from "./input";
 import { Board } from "./board";
 import { TableauPile } from "./piles/tableauPile";
-import * as THREE from "three";
 import { SelectionPile } from "./piles/selectionPile";
 import { StockPile } from "./piles/stockPile";
 import { WastePile } from "./piles/wastePile";
-import { vec3 } from "../vector";
 import { FoundationPile } from "./piles/foundationPile";
+import { Select } from "./rules/select";
+import { Drop } from "./rules/drop";
 
 export class Game {
     private readonly board: Board;
@@ -35,29 +36,31 @@ export class Game {
     }
 
     public mainLoop(input: Input): void {
+        const selection = this.selectionPile.getSelection();
         if (input.mouse.isDown) {
-            if (!input.mouse.wasDown && this.selectionPile.isEmpty()) {
-                this.stockPile.populateSelection(input.mouse.position, this.selectionPile, this.wastePile);
-                this.wastePile.populateSelection(input.mouse.position, this.selectionPile);
-                this.tableauPiles.forEach((pile) => pile.populateSelection(input.mouse.position, this.selectionPile));
-                this.selectionPile.validateAfterSelection();
-            } else {
+            if (!input.mouse.wasDown && !selection) {
+                const select = new Select();
+                this.selectionPile.setSelection(
+                    select.select(input.mouse.position, this.wastePile, this.stockPile, this.tableauPiles, this.foundationPiles)
+                );
+            } else if (selection) {
                 this.selectionPile.moveWithCursor(input.mouse.position);
             }
-        } else if (input.mouse.wasDown && !this.selectionPile.isEmpty()) {
-            const sourcePile = this.selectionPile.getSourcePileOrThrow();
-            if (sourcePile instanceof StockPile) {
-                sourcePile.handleDrop(input.mouse.position, this.selectionPile, this.wastePile);
-            } else if (sourcePile instanceof WastePile) {
-                sourcePile.handleDrop(input.mouse.position, this.selectionPile, this.stockPile, this.tableauPiles, this.foundationPiles);
-            } else if (sourcePile instanceof TableauPile) {
-                sourcePile.handleDrop(input.mouse.position, this.selectionPile, this.tableauPiles, this.foundationPiles);
-            }
-
-            this.selectionPile.validateAfterDrop();
+        } else if (input.mouse.wasDown && selection) {
             this.selectionPile.reset();
-        } else {
-            this.selectionPile.setPosition(vec3(0, 0, -10000));
+            const drop = new Drop();
+            const move = drop.drop(
+                selection,
+                input.mouse.position,
+                true,
+                this.foundationPiles,
+                this.tableauPiles,
+                this.stockPile,
+                this.wastePile
+            );
+            if (move) {
+                move.execute();
+            }
         }
     }
 }

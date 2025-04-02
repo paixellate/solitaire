@@ -1,16 +1,15 @@
 import { Pile } from "./pile";
 import { vec2, vec3 } from "../../vector";
+import { Selection, Selections } from "../rules/selection";
 
 export class SelectionPile extends Pile {
-    private sourcePile: Pile | null;
-    private isASingleCard: boolean;
+    private selection: Selection | Selections | null;
     private initialMousePosition: vec2 | null = null;
     private mousePositionOffset: vec2 | null = null;
 
     constructor(index: number, width: number, height: number, position: vec3, offsetFaceUp: vec2, offsetFaceDown: vec2) {
         super(index, width, height, position, offsetFaceUp, offsetFaceDown);
-        this.sourcePile = null;
-        this.isASingleCard = false;
+        this.selection = null;
     }
 
     public setSelectionCardPosition(mousePosition: vec2, position: vec3): void {
@@ -25,44 +24,27 @@ export class SelectionPile extends Pile {
         }
     }
 
-    public setSourcePile(sourcePile: Pile): void {
-        this.sourcePile = sourcePile;
-    }
-
-    public getSourcePileOrThrow(): Pile {
-        if (this.sourcePile === null) {
-            throw new Error("Selection pile has no source pile");
-        }
-        return this.sourcePile;
-    }
-
-    public isSingleCard(): boolean {
-        return this.isASingleCard;
-    }
-
-    public setIsSingleCard(isSingleCard: boolean): void {
-        this.isASingleCard = isSingleCard;
-    }
-
-    public validateAfterSelection(): void {
-        if (this.isASingleCard && this.getNumberOfCards() > 1) {
-            throw new Error("Selection pile is supposed to be a single card after selection");
-        }
-        if (!this.isEmpty() && this.sourcePile === null) {
-            throw new Error("Selection pile has no source pile after selection");
+    public setSelection(selection: Selection | Selections | null): void {
+        this.selection = selection;
+        if (this.selection) {
+            if (this.selection instanceof Selections) {
+                this.addCards(this.selection.cards);
+            } else {
+                this.addCard(this.selection.card);
+            }
+            this.setSelectionCardPosition(this.selection.mousePosition, this.selection.cardPosition);
         }
     }
 
-    public validateAfterDrop(): void {
-        if (!this.isEmpty()) {
-            throw new Error("Selection pile is not empty after drop");
-        }
+    public getSelection(): Selection | Selections | null {
+        return this.selection;
     }
 
     public reset(): void {
-        this.sourcePile = null;
-        this.isASingleCard = false;
+        this.selection = null;
+        this.popAllCards();
         this.initialMousePosition = null;
         this.mousePositionOffset = null;
+        this.setPosition(vec3(0, 0, -10000));
     }
 }
