@@ -1,25 +1,25 @@
 import { createPileMesh } from "../../mesh";
 import * as THREE from "three";
-import { PileType } from "./pileType";
-import { Card } from "../card";
-import { vec3 } from "../../vector";
+import { Card } from "../cards/card";
+import { vec2, vec3 } from "../../vector";
 import { isMouseOverBox } from "../../mesh/collision";
-import { SelectionPile } from "./selectionPile";
 
 export abstract class Pile {
     private readonly mesh: THREE.Mesh;
     private readonly cards: Card[] = [];
 
     public readonly index: number;
-    public readonly type: PileType;
     public readonly width: number;
     public readonly height: number;
+    public readonly offsetFaceUp: vec2;
+    public readonly offsetFaceDown: vec2;
 
-    constructor(index: number, type: PileType, width: number, height: number, position: THREE.Vector3) {
+    constructor(index: number, width: number, height: number, position: vec3, faceUpOffset: vec2, faceDownOffset: vec2) {
         this.index = index;
-        this.type = type;
         this.width = width;
         this.height = height;
+        this.offsetFaceUp = faceUpOffset;
+        this.offsetFaceDown = faceDownOffset;
         const material = new THREE.MeshStandardMaterial({ color: 0x00aa00 });
 
         this.mesh = createPileMesh(this.width, this.height, material);
@@ -27,13 +27,13 @@ export abstract class Pile {
         this.mesh.geometry.computeBoundingBox();
     }
 
-    public getGlobalPosition(): THREE.Vector3 {
-        let position = new THREE.Vector3();
+    protected getGlobalPosition(): vec3 {
+        let position = vec3(0, 0, 0);
         this.mesh.getWorldPosition(position);
         return position;
     }
 
-    public getTopCardGlobalPosition(): THREE.Vector3 {
+    protected getTopCardGlobalPosition(): vec3 {
         const topCard = this.getTopCard();
         if (topCard) {
             return topCard.getGlobalPosition();
@@ -41,13 +41,27 @@ export abstract class Pile {
         return this.getGlobalPosition();
     }
 
-    public setPosition(position: THREE.Vector3): void {
-        this.mesh.position.copy(position);
-        this.mesh.geometry.computeBoundingBox();
+    protected getTopCard(): Card | null {
+        if (this.cards.length === 0) {
+            return null;
+        }
+        return this.cards[this.cards.length - 1];
     }
 
-    public isEmpty(): boolean {
-        return this.cards.length === 0;
+    protected getBottomCard(): Card | null {
+        if (this.cards.length === 0) {
+            return null;
+        }
+        return this.cards[0];
+    }
+
+    protected getFaceUpCards(): Card[] {
+        return this.cards.filter((card) => card.isFaceUp);
+    }
+
+    public setPosition(position: vec3): void {
+        this.mesh.position.copy(position);
+        this.mesh.geometry.computeBoundingBox();
     }
 
     public addToScene(scene: THREE.Scene): void {
@@ -58,45 +72,46 @@ export abstract class Pile {
         scene.remove(this.mesh);
     }
 
-    public isMouseOver(mousePosition: THREE.Vector2): boolean {
+    public isMouseOver(mousePosition: vec2): boolean {
         const box = new THREE.Box3().setFromObject(this.mesh);
         return isMouseOverBox(mousePosition, box);
     }
 
-    public addCard(card: Card, offsetMultiplier: THREE.Vector2): void {
-        const topCard = this.getTopCard();
-        if (topCard) {
-            const p = vec3(this.width * offsetMultiplier.x, this.height * offsetMultiplier.y, 1);
-            card.addToCard(topCard, p);
-        } else {
-            const p = vec3(0, 0, 1);
-            card.addToMesh(this.mesh, p);
-        }
-        this.cards.push(card);
+    public isEmpty(): boolean {
+        return this.cards.length === 0;
     }
-
-    public abstract addCards(cards: Card[]): void;
 
     public getNumberOfCards(): number {
         return this.cards.length;
     }
 
-    public getTopCard(): Card | null {
-        if (this.cards.length === 0) {
-            return null;
+    public addCard(card: Card, faceUpOffset: vec2 = this.offsetFaceUp, faceDownOffset: vec2 = this.offsetFaceDown): void {
+        const topCard = this.getTopCard();
+        if (topCard) {
+            if (topCard.isFaceUp) {
+                const position = vec3(this.width * faceUpOffset.x, this.height * faceUpOffset.y, 1);
+                card.addToCard(topCard, position);
+            } else {
+                const position = vec3(this.width * faceDownOffset.x, this.height * faceDownOffset.y, 1);
+                card.addToCard(topCard, position);
+            }
+        } else {
+            const position = vec3(0, 0, 1);
+            card.addToMesh(this.mesh, position);
         }
-        return this.cards[this.cards.length - 1];
+        this.cards.push(card);
     }
 
-    public getBottomCard(): Card | null {
-        if (this.cards.length === 0) {
-            return null;
+    public addCards(cards: Card[], faceUpOffset: vec2 = this.offsetFaceUp, faceDownOffset: vec2 = this.offsetFaceDown): void {
+        for (const card of cards) {
+            this.addCard(card, faceUpOffset, faceDownOffset);
         }
-        return this.cards[0];
     }
 
-    protected getFaceUpCards(): Card[] {
-        return this.cards.filter((card) => card.isFaceUp);
+    public addCardsReversed(cards: Card[], faceUpOffset: vec2 = this.offsetFaceUp, faceDownOffset: vec2 = this.offsetFaceDown): void {
+        for (let i = cards.length - 1; i >= 0; i--) {
+            this.addCard(cards[i], faceUpOffset, faceDownOffset);
+        }
     }
 
     public getTopCardOrThrow(): Card {
@@ -115,11 +130,7 @@ export abstract class Pile {
         return bottomCard;
     }
 
-    public canPopCard(): boolean {
-        return this.cards.length > 0;
-    }
-
-    private popCard(): Card | null {
+    public popCard(): Card | null {
         const card = this.cards.pop() ?? null;
         if (card) {
             card.removeFromMesh(this.mesh);
@@ -141,7 +152,7 @@ export abstract class Pile {
         }
     }
 
-    protected popCardsTill(card: Card): Card[] {
+    public popCardsTill(card: Card): Card[] {
         if (!this.cards.includes(card)) {
             throw new Error("Card not found");
         }
@@ -156,7 +167,7 @@ export abstract class Pile {
 
     public popAllCards(): Card[] {
         const cards: Card[] = [];
-        while (this.canPopCard()) {
+        while (!this.isEmpty()) {
             cards.push(this.popCardOrThrow());
         }
         return cards;

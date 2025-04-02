@@ -1,23 +1,14 @@
-import { Card } from "../card";
-import { getRankValue, Rank } from "../rank";
+import { Card } from "../cards/card";
+import { getRankValue, Rank } from "../cards/rank";
 import { Pile } from "./pile";
-import { PileType } from "./pileType";
-import { isOppositeColor } from "../suit";
+import { isOppositeColor } from "../cards/suit";
 import { vec2, vec3 } from "../../vector";
 import { SelectionPile } from "./selectionPile";
 import { FoundationPile } from "./foundationPile";
 
 export class TableauPile extends Pile {
-    constructor(index: number, width: number, height: number, position: vec3) {
-        super(index, PileType.TABLEAU, width, height, position);
-    }
-
-    private getOffset(): vec2 {
-        return vec2(0, -0.2);
-    }
-
-    private getSetupOffset(): vec2 {
-        return vec2(0, -0.04);
+    constructor(index: number, width: number, height: number, position: vec3, offsetFaceUp: vec2, offsetFaceDown: vec2) {
+        super(index, width, height, position, offsetFaceUp, offsetFaceDown);
     }
 
     public canAddCard(card: Card): boolean {
@@ -31,34 +22,11 @@ export class TableauPile extends Pile {
         }
     }
 
-    public addCard(card: Card): void {
-        const topCard = this.getTopCard();
-        if (topCard && topCard.isFaceUp) {
-            super.addCard(card, this.getOffset());
-        } else {
-            super.addCard(card, this.getSetupOffset());
-        }
-    }
-
-    public addCardForSetup(card: Card): void {
-        super.addCard(card, this.getSetupOffset());
-    }
-
-    public addCards(cards: Card[]): void {
-        for (const card of cards) {
-            this.addCard(card);
-        }
-    }
-
     private getMouseOverCard(mousePosition: vec2): Card {
         const mouseOverCards = this.getFaceUpCards()
             .filter((card) => card.isMouseOver(mousePosition))
             .sort((a, b) => b.getGlobalPosition().z - a.getGlobalPosition().z);
         return mouseOverCards[0];
-    }
-    private popSelectedCards(mousePosition: vec2): Card[] {
-        const mouseOverCard = this.getMouseOverCard(mousePosition);
-        return this.popCardsTill(mouseOverCard);
     }
 
     public populateSelection(mousePosition: vec2, selectionPile: SelectionPile): void {
@@ -70,13 +38,8 @@ export class TableauPile extends Pile {
             selectionPile.setSourcePile(this);
             const card = this.getMouseOverCard(mousePosition);
             selectionPile.setSelectionCardPosition(mousePosition, card.getGlobalPosition());
-            const selectedCards = this.popCardsTill(card).reverse();
-            if (selectedCards.length > 1) {
-                selectionPile.setIsSingleCard(false);
-            } else {
-                selectionPile.setIsSingleCard(true);
-            }
-            selectionPile.addCards(selectedCards, this.getOffset());
+            selectionPile.addCardsReversed(this.popCardsTill(card), this.offsetFaceUp);
+            selectionPile.setIsSingleCard(selectionPile.getNumberOfCards() === 1);
         } else {
             // do nothing.
         }
@@ -96,7 +59,7 @@ export class TableauPile extends Pile {
             }
             if (tableauPile.isMouseOver(mousePosition)) {
                 if (tableauPile.canAddCard(selectionPile.getBottomCardOrThrow())) {
-                    tableauPile.addCards(selectionPile.popAllCards().reverse());
+                    tableauPile.addCardsReversed(selectionPile.popAllCards());
                     wasAdded = true;
                 }
                 break;
@@ -115,10 +78,11 @@ export class TableauPile extends Pile {
             }
         }
         if (wasAdded) {
-            this.getTopCardOrThrow().makeFaceUp();
+            if (!this.isEmpty()) {
+                this.getTopCardOrThrow().makeFaceUp();
+            }
         } else {
-            this.addCards(selectionPile.popAllCards().reverse());
+            this.addCardsReversed(selectionPile.popAllCards());
         }
-        selectionPile.reset();
     }
 }

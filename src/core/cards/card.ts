@@ -1,23 +1,26 @@
-import { vec3 } from "../vector";
-import { createCardMesh } from "../mesh";
-import { MaterialManager } from "../texture";
-import { Rank, RANKS } from "./rank";
-import { Suit, SUITS } from "./suit";
+import { vec3 } from "../../vector";
+import { createCardMesh } from "../../mesh";
+import { MaterialManager } from "../../texture";
+import { Rank } from "./rank";
+import { Suit } from "./suit";
 import * as THREE from "three";
-import { isMouseOverBox } from "../mesh/collision";
+import { isMouseOverBox } from "../../mesh/collision";
 
 export class Card {
     private readonly group: THREE.Group;
     private readonly positioning: THREE.Object3D;
+    public readonly rank: Rank;
+    public readonly suit: Suit;
+    public readonly width: number;
+    public readonly height: number;
+    public isFaceUp: boolean = false;
 
-    constructor(
-        public readonly rank: Rank,
-        public readonly suit: Suit,
-        public readonly width: number,
-        public readonly height: number,
-        position: THREE.Vector3,
-        public isFaceUp: boolean = false
-    ) {
+    constructor(rank: Rank, suit: Suit, width: number, height: number, position: vec3) {
+        this.rank = rank;
+        this.suit = suit;
+        this.width = width;
+        this.height = height;
+
         this.positioning = new THREE.Object3D();
         this.positioning.position.copy(position);
 
@@ -30,17 +33,7 @@ export class Card {
         this.positioning.add(this.group);
     }
 
-    public getGlobalPosition(): THREE.Vector3 {
-        let position = new THREE.Vector3();
-        this.positioning.getWorldPosition(position);
-        return position;
-    }
-
-    private getPosition(): THREE.Vector3 {
-        return this.positioning.position.clone();
-    }
-
-    private setPosition(position: THREE.Vector3): void {
+    private setPosition(position: vec3): void {
         this.positioning.position.copy(position);
     }
 
@@ -48,19 +41,27 @@ export class Card {
         this.group.rotation.y = yRotation;
     }
 
+    public getGlobalPosition(): vec3 {
+        let position = new THREE.Vector3();
+        this.positioning.getWorldPosition(position);
+        return position;
+    }
+
     public isMouseOver(mousePosition: THREE.Vector2): boolean {
         const box = new THREE.Box3().setFromCenterAndSize(this.getGlobalPosition(), vec3(this.width, this.height, 0));
         return isMouseOverBox(mousePosition, box);
     }
 
-    public makeFaceUp(): void {
+    public makeFaceUp(): Card {
         this.isFaceUp = true;
         this.setRotation(0);
+        return this;
     }
 
-    public makeFaceDown(): void {
+    public makeFaceDown(): Card {
         this.isFaceUp = false;
         this.setRotation(Math.PI);
+        return this;
     }
 
     public addToScene(scene: THREE.Scene): void {
@@ -71,7 +72,7 @@ export class Card {
         scene.remove(this.positioning);
     }
 
-    public addToMesh(mesh: THREE.Mesh, positionOffset: THREE.Vector3): void {
+    public addToMesh(mesh: THREE.Mesh, positionOffset: vec3): void {
         mesh.add(this.positioning);
         this.setPosition(positionOffset);
     }
@@ -80,7 +81,7 @@ export class Card {
         mesh.remove(this.positioning);
     }
 
-    public addToCard(card: Card, positionOffset: THREE.Vector3): void {
+    public addToCard(card: Card, positionOffset: vec3): void {
         card.positioning.add(this.positioning);
         this.setPosition(positionOffset);
     }

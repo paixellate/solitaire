@@ -1,6 +1,4 @@
-import { Card } from "../card";
 import { Pile } from "./pile";
-import { PileType } from "./pileType";
 import { vec2, vec3 } from "../../vector";
 import { StockPile } from "./stockPile";
 import { SelectionPile } from "./selectionPile";
@@ -8,25 +6,8 @@ import { TableauPile } from "./tableauPile";
 import { FoundationPile } from "./foundationPile";
 
 export class WastePile extends Pile {
-    constructor(index: number, width: number, height: number, position: vec3) {
-        super(index, PileType.WASTE, width, height, position);
-    }
-
-    public addCard(card: Card): void {
-        card.makeFaceUp();
-        super.addCard(card, vec2(0, 0));
-    }
-
-    public addCards(cards: Card[]): void {
-        for (const card of cards) {
-            this.addCard(card);
-        }
-    }
-
-    public addCardsReversed(cards: Card[]): void {
-        for (let i = cards.length - 1; i >= 0; i--) {
-            this.addCard(cards[i]);
-        }
+    constructor(index: number, width: number, height: number, position: vec3, offsetFaceUp: vec2, offsetFaceDown: vec2) {
+        super(index, width, height, position, offsetFaceUp, offsetFaceDown);
     }
 
     public populateSelection(mousePosition: vec2, selectionPile: SelectionPile): void {
@@ -48,7 +29,9 @@ export class WastePile extends Pile {
         if (stockPile.isMouseOver(mousePosition)) {
             stockPile.addCards(selectionPile.popAllCards());
         } else {
-            this.addCardsReversed(selectionPile.popAllCards());
+            const cards = selectionPile.popAllCards();
+            cards.forEach((card) => card.makeFaceUp());
+            this.addCardsReversed(cards);
         }
         selectionPile.reset();
     }
@@ -90,7 +73,5 @@ export class WastePile extends Pile {
         if (!wasAdded) {
             this.addCard(selectionPile.popCardOrThrow());
         }
-
-        selectionPile.reset();
     }
 }

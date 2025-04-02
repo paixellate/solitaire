@@ -1,6 +1,17 @@
 import * as THREE from "three";
 import { Game } from "./core/game";
 import { Input } from "./core/input";
+import Stats from "stats.js";
+
+const stats = new Stats();
+// the number will decide which information will be displayed
+// 0 => FPS Frames rendered in the last second. The higher the number the better.
+// 1 => MS Milliseconds needed to render a frame. The lower the number the better.
+// 2 => MB MBytes of allocated memory. (Run Chrome with --enable-precise-memory-info)
+// 3 => CUSTOM User-defined panel support.
+stats.showPanel(0);
+
+document.body.appendChild(stats.dom);
 
 let input: Input = {
     mouse: {
@@ -51,11 +62,14 @@ game.addToScene(scene);
 
 function animate() {
     requestAnimationFrame(animate);
+
+    stats.begin();
     game.mainLoop(input);
 
     // Render the scene
     renderer.render(scene, camera);
     input.reset();
+    stats.end();
 }
 
 animate();

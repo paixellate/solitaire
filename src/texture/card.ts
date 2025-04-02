@@ -1,5 +1,5 @@
-import { getSuitColor, Suit } from "../core/suit";
-import { Rank } from "../core/rank";
+import { getSuitColor, Suit } from "../core/cards/suit";
+import { Rank } from "../core/cards/rank";
 
 export const TEXT_OFFSET_MULTIPLIER = 0.04;
 

@@ -23,7 +23,7 @@ export class Game {
         this.tableauPiles = this.board.createTableauPiles();
         this.foundationPiles = this.board.createFoundationPiles();
         this.selectionPile = this.board.createSelectionPile();
-        this.board.dealCards(this.stockPile, this.tableauPiles);
+        this.board.dealCards(this.board.createDeck(), this.stockPile, this.tableauPiles);
     }
 
     public addToScene(scene: THREE.Scene): void {
@@ -35,7 +35,6 @@ export class Game {
     }
 
     public mainLoop(input: Input): void {
-
         if (input.mouse.isDown) {
             if (!input.mouse.wasDown && this.selectionPile.isEmpty()) {
                 this.stockPile.populateSelection(input.mouse.position, this.selectionPile, this.wastePile);
@@ -50,21 +49,14 @@ export class Game {
             if (sourcePile instanceof StockPile) {
                 sourcePile.handleDrop(input.mouse.position, this.selectionPile, this.wastePile);
             } else if (sourcePile instanceof WastePile) {
-                sourcePile.handleDrop(
-                    input.mouse.position,
-                    this.selectionPile,
-                    this.stockPile,
-                    this.tableauPiles,
-                    this.foundationPiles
-                );
+                sourcePile.handleDrop(input.mouse.position, this.selectionPile, this.stockPile, this.tableauPiles, this.foundationPiles);
             } else if (sourcePile instanceof TableauPile) {
                 sourcePile.handleDrop(input.mouse.position, this.selectionPile, this.tableauPiles, this.foundationPiles);
             }
 
             this.selectionPile.validateAfterDrop();
             this.selectionPile.reset();
-        }
-        else {
+        } else {
             this.selectionPile.setPosition(vec3(0, 0, -10000));
         }
     }

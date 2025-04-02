@@ -1,17 +1,12 @@
 import { vec3 } from "../../vector";
 import { vec2 } from "../../vector";
-import { Card } from "../card";
-import { getRankValue, Rank } from "../rank";
+import { Card } from "../cards/card";
+import { getRankValue, Rank } from "../cards/rank";
 import { Pile } from "./pile";
-import { PileType } from "./pileType";
 
 export class FoundationPile extends Pile {
-    constructor(index: number, width: number, height: number, position: vec3) {
-        super(index, PileType.FOUNDATION, width, height, position);
-    }
-
-    private getOffset(): vec2 {
-        return vec2(0, 0);
+    constructor(index: number, width: number, height: number, position: vec3, faceUpOffset: vec2, faceDownOffset: vec2) {
+        super(index, width, height, position, faceUpOffset, faceDownOffset);
     }
 
     public canAddCard(card: Card): boolean {
@@ -22,16 +17,6 @@ export class FoundationPile extends Pile {
             return isOneRankAbove && isSameSuit;
         } else {
             return card.rank === Rank.ACE;
-        }
-    }
-
-    public addCard(card: Card, offset: vec2 = vec2(0, 0)): void {
-        super.addCard(card, offset);
-    }
-
-    public addCards(cards: Card[]): void {
-        for (const card of cards) {
-            this.addCard(card, this.getOffset());
         }
     }
 }
