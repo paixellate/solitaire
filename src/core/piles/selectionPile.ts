@@ -3,48 +3,36 @@ import { vec2, vec3 } from "../../vector";
 import { Selections } from "../rules/selection";
 
 export class SelectionPile extends Pile {
-    private selection: Selections | null;
     private initialMousePosition: vec2 | null = null;
     private mousePositionOffset: vec2 | null = null;
 
     constructor(index: number, width: number, height: number, position: vec3, offsetFaceUp: vec2, offsetFaceDown: vec2) {
         super(index, width, height, position, offsetFaceUp, offsetFaceDown);
-        this.selection = null;
     }
 
     public setSelectionCardPosition(mousePosition: vec2, position: vec3): void {
         this.initialMousePosition = mousePosition.clone();
         this.mousePositionOffset = vec2(position.x - mousePosition.x, position.y - mousePosition.y);
-        this.setPosition(vec3(position.x, position.y, 100));
+        this.setLocalPosition(vec3(position.x, position.y, 100));
     }
 
     public moveWithCursor(mousePosition: vec2): void {
         if (this.initialMousePosition && this.mousePositionOffset) {
-            this.setPosition(vec3(mousePosition.x + this.mousePositionOffset.x, mousePosition.y + this.mousePositionOffset.y, 100));
+            this.setLocalPosition(vec3(mousePosition.x + this.mousePositionOffset.x, mousePosition.y + this.mousePositionOffset.y, 100));
         }
     }
 
     public setSelection(selection: Selections | null): void {
-        this.selection = selection;
-        if (this.selection) {
-            this.addCards(this.selection.cards);
-            this.setSelectionCardPosition(this.selection.mousePosition, this.selection.cardPosition);
+        if (selection) {
+            this.addCards(selection.cards);
+            this.setSelectionCardPosition(selection.mousePosition, selection.cardPosition);
         }
     }
 
-    public popSelectedCards(mousePosition: vec2): Selections | null {
-        throw new Error("SelectionPile does not support popSelectedCards");
-    }
-
-    public getSelection(): Selections | null {
-        return this.selection;
-    }
-
     public reset(): void {
-        this.selection = null;
         this.popAllCards();
         this.initialMousePosition = null;
         this.mousePositionOffset = null;
-        this.setPosition(vec3(0, 0, -10000));
+        this.setLocalPosition(vec3(0, 0, -10000));
     }
 }

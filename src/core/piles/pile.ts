@@ -1,38 +1,22 @@
-import { createPileMesh } from "../../mesh";
 import * as THREE from "three";
 import { Card } from "../cards/card";
 import { vec2, vec3 } from "../../vector";
-import { isMouseOverBox } from "../../mesh/collision";
-import { Selections } from "../rules/selection";
+import { Rectangle } from "../../mesh/reactangle";
 
-export abstract class Pile {
+export abstract class Pile extends Rectangle {
     private readonly name: string = this.constructor.name;
-    private readonly mesh: THREE.Mesh;
     private readonly cards: Card[] = [];
 
     public readonly index: number;
-    public readonly width: number;
-    public readonly height: number;
     public readonly offsetFaceUp: vec2;
     public readonly offsetFaceDown: vec2;
 
     constructor(index: number, width: number, height: number, position: vec3, faceUpOffset: vec2, faceDownOffset: vec2) {
+        super(width, height, new THREE.MeshStandardMaterial({ color: 0x00aa00 }), new THREE.MeshStandardMaterial({ color: 0x00aa00 }));
         this.index = index;
-        this.width = width;
-        this.height = height;
         this.offsetFaceUp = faceUpOffset;
         this.offsetFaceDown = faceDownOffset;
-        const material = new THREE.MeshStandardMaterial({ color: 0x00aa00 });
-
-        this.mesh = createPileMesh(this.width, this.height, material);
-        this.mesh.position.copy(position);
-        this.mesh.geometry.computeBoundingBox();
-    }
-
-    public getGlobalPosition(): vec3 {
-        let position = vec3(0, 0, 0);
-        this.mesh.getWorldPosition(position);
-        return position;
+        this.setLocalPosition(position);
     }
 
     public getTopCardGlobalPosition(): vec3 {
@@ -61,24 +45,6 @@ export abstract class Pile {
         return this.cards.filter((card) => card.isFaceUp);
     }
 
-    public setPosition(position: vec3): void {
-        this.mesh.position.copy(position);
-        this.mesh.geometry.computeBoundingBox();
-    }
-
-    public addToScene(scene: THREE.Scene): void {
-        scene.add(this.mesh);
-    }
-
-    public removeFromScene(scene: THREE.Scene): void {
-        scene.remove(this.mesh);
-    }
-
-    public isMouseOver(mousePosition: vec2): boolean {
-        const box = new THREE.Box3().setFromObject(this.mesh);
-        return isMouseOverBox(mousePosition, box);
-    }
-
     public isEmpty(): boolean {
         return this.cards.length === 0;
     }
@@ -92,14 +58,17 @@ export abstract class Pile {
         if (topCard) {
             if (topCard.isFaceUp) {
                 const position = vec3(this.width * faceUpOffset.x, this.height * faceUpOffset.y, 1);
-                card.addToCard(topCard, position);
+                card.setLocalPosition(position);
+                card.addToObject(topCard);
             } else {
                 const position = vec3(this.width * faceDownOffset.x, this.height * faceDownOffset.y, 1);
-                card.addToCard(topCard, position);
+                card.setLocalPosition(position);
+                card.addToObject(topCard);
             }
         } else {
             const position = vec3(0, 0, 1);
-            card.addToMesh(this.mesh, position);
+            card.setLocalPosition(position);
+            card.addToObject(this);
         }
         this.cards.push(card);
     }
@@ -139,11 +108,11 @@ export abstract class Pile {
         }
 
         if (this.cards.length === 0) {
-            card.removeFromMesh(this.mesh);
+            card.removeFromObject(this);
             return card;
         } else {
             const topCard = this.cards[this.cards.length - 1];
-            card.removeFromCard(topCard);
+            card.removeFromObject(topCard);
             return card;
         }
     }
@@ -176,6 +145,4 @@ export abstract class Pile {
         }
         return cards;
     }
-
-    public abstract popSelectedCards(mousePosition: vec2): Selections | null;
 }

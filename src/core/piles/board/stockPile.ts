@@ -1,9 +1,10 @@
-import { Pile } from "./pile";
-import { vec2, vec3 } from "../../vector";
-import { Selections } from "../rules/selection";
+import { Pile } from "../pile";
+import { vec2, vec3 } from "../../../vector";
+import { Selections } from "../../rules/selection";
 import { WastePile } from "./wastePile";
+import { BoardPile } from "./boardPile";
 
-export class StockPile extends Pile {
+export class StockPile extends Pile implements BoardPile {
     private wastePile: WastePile;
 
     constructor(

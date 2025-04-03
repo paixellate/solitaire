@@ -1,11 +1,12 @@
-import { Card } from "../cards/card";
-import { getRankValue, Rank } from "../cards/rank";
-import { Pile } from "./pile";
-import { isOppositeColor } from "../cards/suit";
-import { vec2, vec3 } from "../../vector";
-import { Selections } from "../rules/selection";
+import { Card } from "../../cards/card";
+import { getRankValue, Rank } from "../../cards/rank";
+import { Pile } from "../pile";
+import { isOppositeColor } from "../../cards/suit";
+import { vec2, vec3 } from "../../../vector";
+import { Selections } from "../../rules/selection";
+import { BoardPile } from "./boardPile";
 
-export class TableauPile extends Pile {
+export class TableauPile extends Pile implements BoardPile {
     constructor(index: number, width: number, height: number, position: vec3, offsetFaceUp: vec2, offsetFaceDown: vec2) {
         super(index, width, height, position, offsetFaceUp, offsetFaceDown);
     }
@@ -23,7 +24,7 @@ export class TableauPile extends Pile {
 
     private getMouseOverCard(mousePosition: vec2): Card | null {
         const mouseOverCards = this.getFaceUpCards()
-            .filter((card) => card.isMouseOver(mousePosition))
+            .filter((card) => card.getIsMouseOver(mousePosition))
             .sort((a, b) => b.getGlobalPosition().z - a.getGlobalPosition().z);
 
         if (mouseOverCards.length > 0) {

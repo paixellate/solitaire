@@ -10,6 +10,7 @@ export class Game {
     private readonly board: Board;
     private readonly history: History;
     private readonly selectionPile: SelectionPile;
+    private selection: Selections | null = null;
 
     constructor() {
         this.board = new Board();
@@ -23,18 +24,19 @@ export class Game {
     }
 
     public mainLoop(input: Input): void {
-        const selection = this.selectionPile.getSelection();
         if (input.mouse.isDown) {
-            if (!input.mouse.wasDown && !selection) {
-                this.selectionPile.setSelection(Selections.create(input.mouse.position, this.board));
-            } else if (selection) {
+            if (!input.mouse.wasDown && !this.selection) {
+                this.selection = Selections.create(input.mouse.position, this.board);
+                this.selectionPile.setSelection(this.selection);
+            } else if (this.selection) {
                 this.selectionPile.moveWithCursor(input.mouse.position);
             }
-        } else if (input.mouse.wasDown && selection) {
+        } else if (input.mouse.wasDown && this.selection) {
             this.selectionPile.reset();
-            const move = Move.create(selection, input.mouse.position, this.board);
+            const move = Move.create(this.selection, input.mouse.position, this.board);
             move.execute();
             this.history.addMove(move);
+            this.selection = null;
         }
     }
 }

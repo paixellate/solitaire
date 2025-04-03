@@ -1,11 +1,12 @@
-import { vec3 } from "../../vector";
-import { vec2 } from "../../vector";
-import { Card } from "../cards/card";
-import { getRankValue, Rank } from "../cards/rank";
-import { Selections } from "../rules/selection";
-import { Pile } from "./pile";
+import { vec3 } from "../../../vector";
+import { vec2 } from "../../../vector";
+import { Card } from "../../cards/card";
+import { getRankValue, Rank } from "../../cards/rank";
+import { Selections } from "../../rules/selection";
+import { Pile } from "../pile";
+import { BoardPile } from "./boardPile";
 
-export class FoundationPile extends Pile {
+export class FoundationPile extends Pile implements BoardPile {
     constructor(index: number, width: number, height: number, position: vec3, faceUpOffset: vec2, faceDownOffset: vec2) {
         super(index, width, height, position, faceUpOffset, faceDownOffset);
     }
