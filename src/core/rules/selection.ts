@@ -5,6 +5,7 @@ import { Pile } from "../piles/pile";
 import { StockPile } from "../piles/board/stockPile";
 import { WastePile } from "../piles/board/wastePile";
 import { FoundationPile } from "../piles/board/foundationPile";
+import { TableauPile } from "../piles/board/tableauPile";
 
 export class Selections {
     public readonly cards: Card[];
@@ -41,6 +42,10 @@ export class Selections {
 
     public isSourceFoundationPile(): boolean {
         return this.source instanceof FoundationPile;
+    }
+
+    public isSourceTableauPile(): boolean {
+        return this.source instanceof TableauPile;
     }
 
     public static create(mousePosition: vec2, board: Board): Selections | null {

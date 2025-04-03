@@ -37,7 +37,7 @@ export class TableauPile extends Pile implements BoardPile {
         const card = this.getMouseOverCard(mousePosition);
         if (card) {
             const cardPosition = card.getGlobalPosition();
-            const cards = this.popCardsTill(card).reverse();
+            const cards = this.popCardsTill(card);
             return new Selections(cards, mousePosition, cardPosition, this);
         }
         return null;

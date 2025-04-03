@@ -27,7 +27,7 @@ export class StockPile extends Pile implements BoardPile {
             return new Selections([card], mousePosition, cardPosition, this);
         } else if (this.isEmpty() && !this.wastePile.isEmpty()) {
             const cardPosition = this.getGlobalPosition();
-            const cards = this.wastePile.popAllCards().map((card) => card.makeFaceDown());
+            const cards = this.wastePile.popAllCards();
             return new Selections(cards, mousePosition, cardPosition, this.wastePile);
         } else {
             return null;

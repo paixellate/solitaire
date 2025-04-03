@@ -1,6 +1,7 @@
 import { Pile } from "./pile";
 import { vec2, vec3 } from "../../vector";
 import { Selections } from "../rules/selection";
+import { TableauPile } from "./board/tableauPile";
 
 export class SelectionPile extends Pile {
     private initialMousePosition: vec2 | null = null;
@@ -24,7 +25,13 @@ export class SelectionPile extends Pile {
 
     public setSelection(selection: Selections | null): void {
         if (selection) {
-            this.addCards(selection.cards);
+            if (selection.isSourceTableauPile()) {
+                this.addCards(selection.cards.slice().reverse(), this.offsetFaceUp, this.offsetFaceUp);
+            } else if (selection.isSourceWastePile()) {
+                this.addCards(selection.cards.slice().reverse(), this.offsetFaceDown, this.offsetFaceDown);
+            } else {
+                this.addCards(selection.cards);
+            }
             this.setSelectionCardPosition(selection.mousePosition, selection.cardPosition);
         }
     }

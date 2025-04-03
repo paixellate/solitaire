@@ -3,6 +3,11 @@ import { vec3 } from "../../vector";
 import { Button } from "./button";
 import { Input } from "../input";
 
+export enum Action {
+    None,
+    Undo,
+}
+
 export class Controls {
     private readonly undo: Button;
 
@@ -14,7 +19,11 @@ export class Controls {
         this.undo.addToScene(scene);
     }
 
-    public update(input: Input): void {
-        this.undo.update(input);
+    public update(input: Input): Action {
+        if (this.undo.update(input)) {
+            return Action.Undo;
+        }
+
+        return Action.None;
     }
 }
