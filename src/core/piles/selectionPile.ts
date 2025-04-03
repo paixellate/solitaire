@@ -1,14 +1,23 @@
 import { Pile } from "./pile";
 import { vec2, vec3 } from "../../vector";
 import { Selections } from "../rules/selection";
-import { TableauPile } from "./board/tableauPile";
+import * as THREE from "three";
 
 export class SelectionPile extends Pile {
     private initialMousePosition: vec2 | null = null;
     private mousePositionOffset: vec2 | null = null;
 
-    constructor(index: number, width: number, height: number, position: vec3, offsetFaceUp: vec2, offsetFaceDown: vec2) {
-        super(index, width, height, position, offsetFaceUp, offsetFaceDown);
+    constructor(
+        index: number,
+        width: number,
+        height: number,
+        position: vec3,
+        offsetFaceUp: vec2,
+        offsetFaceDown: vec2,
+        materialFront: THREE.Material,
+        materialBack: THREE.Material
+    ) {
+        super(index, width, height, position, offsetFaceUp, offsetFaceDown, materialFront, materialBack);
     }
 
     public setSelectionCardPosition(mousePosition: vec2, position: vec3): void {

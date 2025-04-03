@@ -7,6 +7,7 @@ import { FoundationPile } from "./piles/board/foundationPile";
 import { Deck } from "./cards/deck";
 import * as THREE from "three";
 import { Rectangle } from "../mesh/reactangle";
+import { MaterialCache } from "../texture/materialCache";
 
 export class Board extends Rectangle {
     public readonly wastePile: WastePile;
@@ -15,7 +16,10 @@ export class Board extends Rectangle {
     public readonly foundationPiles: FoundationPile[];
 
     constructor() {
-        super(1200, 800, new THREE.MeshBasicMaterial({ color: 0x006600 }), new THREE.MeshBasicMaterial({ color: 0xf00000 }));
+        const materialFront = new THREE.MeshBasicMaterial({ color: 0x006600 });
+        const materialBack = new THREE.MeshBasicMaterial({ color: 0xf00000 });
+        super(1200, 800, materialFront, materialBack);
+
         this.setLocalPosition(vec3(0, 0, -100));
         this.wastePile = this.createWastePile();
         this.stockPile = this.createStockPile(this.wastePile);
@@ -30,35 +34,46 @@ export class Board extends Rectangle {
     }
 
     public createSelectionPile(): SelectionPile {
-        return new SelectionPile(0, 100, 140, vec3(0, 0, -10000), vec2(0, -0.2), vec2(0.001, -0.001));
+        const material = new THREE.MeshBasicMaterial({ color: 0x00aa00 });
+        material.transparent = true;
+        material.opacity = 0.0;
+        return new SelectionPile(0, 100, 140, vec3(0, 0, 0), vec2(0, -0.2), vec2(0.001, -0.001), material, material);
     }
 
     public createStockPile(wastePile: WastePile): StockPile {
-        return new StockPile(1, 100, 140, vec3(450, 300, 0), vec2(0, -0.2), vec2(0.001, -0.001), wastePile);
+        const materialFront = MaterialCache.getInstance().getPileMaterial("∅", "#040", "#030", 100, 140);
+        const materialBack = MaterialCache.getInstance().getPileMaterial("∅", "#040", "#030", 100, 140);
+        return new StockPile(1, 100, 140, vec3(450, 300, 0), vec2(0, -0.2), vec2(0.001, -0.001), materialFront, materialBack, wastePile);
     }
 
     public createWastePile(): WastePile {
-        return new WastePile(2, 250, 140, vec3(225, 300, 0), vec2(0.001, -0.001), vec2(0.001, -0.001));
+        const materialFront = MaterialCache.getInstance().getPileMaterial("", "#040", "#030", 100, 140);
+        const materialBack = MaterialCache.getInstance().getPileMaterial("", "#040", "#030", 100, 140);
+        return new WastePile(2, 100, 140, vec3(300, 300, 0), vec2(0.001, -0.001), vec2(0.001, -0.001), materialFront, materialBack);
     }
 
     public createTableauPiles(): TableauPile[] {
+        const materialFront = MaterialCache.getInstance().getPileMaterial("K", "#040", "#030", 100, 140);
+        const materialBack = MaterialCache.getInstance().getPileMaterial("K", "#040", "#030", 100, 140);
         return [
-            new TableauPile(3, 100, 140, vec3(-450, 100, 0), vec2(0, -0.2), vec2(0, -0.04)),
-            new TableauPile(4, 100, 140, vec3(-300, 100, 0), vec2(0, -0.2), vec2(0, -0.04)),
-            new TableauPile(5, 100, 140, vec3(-150, 100, 0), vec2(0, -0.2), vec2(0, -0.04)),
-            new TableauPile(6, 100, 140, vec3(0, 100, 0), vec2(0, -0.2), vec2(0, -0.04)),
-            new TableauPile(7, 100, 140, vec3(150, 100, 0), vec2(0, -0.2), vec2(0, -0.04)),
-            new TableauPile(8, 100, 140, vec3(300, 100, 0), vec2(0, -0.2), vec2(0, -0.04)),
-            new TableauPile(9, 100, 140, vec3(450, 100, 0), vec2(0, -0.2), vec2(0, -0.04)),
+            new TableauPile(3, 100, 140, vec3(-450, 100, 0), vec2(0, -0.2), vec2(0, -0.04), materialFront, materialBack),
+            new TableauPile(4, 100, 140, vec3(-300, 100, 0), vec2(0, -0.2), vec2(0, -0.04), materialFront, materialBack),
+            new TableauPile(5, 100, 140, vec3(-150, 100, 0), vec2(0, -0.2), vec2(0, -0.04), materialFront, materialBack),
+            new TableauPile(6, 100, 140, vec3(0, 100, 0), vec2(0, -0.2), vec2(0, -0.04), materialFront, materialBack),
+            new TableauPile(7, 100, 140, vec3(150, 100, 0), vec2(0, -0.2), vec2(0, -0.04), materialFront, materialBack),
+            new TableauPile(8, 100, 140, vec3(300, 100, 0), vec2(0, -0.2), vec2(0, -0.04), materialFront, materialBack),
+            new TableauPile(9, 100, 140, vec3(450, 100, 0), vec2(0, -0.2), vec2(0, -0.04), materialFront, materialBack),
         ];
     }
 
     public createFoundationPiles(): FoundationPile[] {
+        const materialFront = MaterialCache.getInstance().getPileMaterial("A", "#040", "#030", 100, 140);
+        const materialBack = MaterialCache.getInstance().getPileMaterial("A", "#040", "#030", 100, 140);
         return [
-            new FoundationPile(10, 100, 140, vec3(-450, 300, 0), vec2(0.001, -0.001), vec2(0.001, -0.001)),
-            new FoundationPile(11, 100, 140, vec3(-300, 300, 0), vec2(0.001, -0.001), vec2(0.001, -0.001)),
-            new FoundationPile(12, 100, 140, vec3(-150, 300, 0), vec2(0.001, -0.001), vec2(0.001, -0.001)),
-            new FoundationPile(13, 100, 140, vec3(0, 300, 0), vec2(0.001, -0.001), vec2(0.001, -0.001)),
+            new FoundationPile(10, 100, 140, vec3(-450, 300, 0), vec2(0.001, -0.001), vec2(0.001, -0.001), materialFront, materialBack),
+            new FoundationPile(11, 100, 140, vec3(-300, 300, 0), vec2(0.001, -0.001), vec2(0.001, -0.001), materialFront, materialBack),
+            new FoundationPile(12, 100, 140, vec3(-150, 300, 0), vec2(0.001, -0.001), vec2(0.001, -0.001), materialFront, materialBack),
+            new FoundationPile(13, 100, 140, vec3(0, 300, 0), vec2(0.001, -0.001), vec2(0.001, -0.001), materialFront, materialBack),
         ];
     }
 

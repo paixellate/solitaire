@@ -3,6 +3,7 @@ import { vec2, vec3 } from "../../../vector";
 import { Selections } from "../../rules/selection";
 import { WastePile } from "./wastePile";
 import { BoardPile } from "./boardPile";
+import * as THREE from "three";
 
 export class StockPile extends Pile implements BoardPile {
     private wastePile: WastePile;
@@ -14,9 +15,11 @@ export class StockPile extends Pile implements BoardPile {
         position: vec3,
         offsetFaceUp: vec2,
         offsetFaceDown: vec2,
+        materialFront: THREE.Material,
+        materialBack: THREE.Material,
         wastePile: WastePile
     ) {
-        super(index, width, height, position, offsetFaceUp, offsetFaceDown);
+        super(index, width, height, position, offsetFaceUp, offsetFaceDown, materialFront, materialBack);
         this.wastePile = wastePile;
     }
 

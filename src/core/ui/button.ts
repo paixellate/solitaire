@@ -10,15 +10,12 @@ export class Button extends Rectangle {
     private materialDown: THREE.Material;
 
     constructor(text: string, width: number, height: number, position: vec3) {
-        const color = new THREE.Color("#666");
-        const colorOver = new THREE.Color("#999");
-        const colorDown = new THREE.Color("#333");
-        const buttonMaterial = MaterialCache.getInstance().getButtonMaterial(text, color, width, height);
+        const buttonMaterial = MaterialCache.getInstance().getButtonMaterial(text, "#333", "#fff", width, height);
         super(width, height, buttonMaterial, buttonMaterial);
 
         this.material = buttonMaterial;
-        this.materialOver = MaterialCache.getInstance().getButtonMaterial(text, colorOver, width, height);
-        this.materialDown = MaterialCache.getInstance().getButtonMaterial(text, colorDown, width, height);
+        this.materialOver = MaterialCache.getInstance().getButtonMaterial(text, "#666", "#fff", width, height);
+        this.materialDown = MaterialCache.getInstance().getButtonMaterial(text, "#111", "#fff", width, height);
         this.setLocalPosition(position);
     }
 

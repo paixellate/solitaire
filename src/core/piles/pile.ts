@@ -11,8 +11,17 @@ export abstract class Pile extends Rectangle {
     public readonly offsetFaceUp: vec2;
     public readonly offsetFaceDown: vec2;
 
-    constructor(index: number, width: number, height: number, position: vec3, faceUpOffset: vec2, faceDownOffset: vec2) {
-        super(width, height, new THREE.MeshStandardMaterial({ color: 0x00aa00 }), new THREE.MeshStandardMaterial({ color: 0x00aa00 }));
+    constructor(
+        index: number,
+        width: number,
+        height: number,
+        position: vec3,
+        faceUpOffset: vec2,
+        faceDownOffset: vec2,
+        materialFront: THREE.Material,
+        materialBack: THREE.Material
+    ) {
+        super(width, height, materialFront, materialBack);
         this.index = index;
         this.offsetFaceUp = faceUpOffset;
         this.offsetFaceDown = faceDownOffset;

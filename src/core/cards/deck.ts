@@ -2,6 +2,7 @@ import { Card } from "./card";
 import { Suit } from "./suit";
 import { Rank } from "./rank";
 import { vec3 } from "../../vector";
+import { MaterialCache } from "../../texture/materialCache";
 
 export class Deck {
     private cards: Card[];
@@ -10,7 +11,9 @@ export class Deck {
         this.cards = [];
         for (const suit of Object.values(Suit)) {
             for (const rank of Object.values(Rank)) {
-                this.cards.push(new Card(rank, suit, width, height, vec3(0, 0, 0)));
+                const materialFront = MaterialCache.getInstance().getCardMaterial(rank, suit, width, height);
+                const materialBack = MaterialCache.getInstance().getCardBackMaterial(width, height);
+                this.cards.push(new Card(rank, suit, width, height, vec3(0, 0, 0), materialFront, materialBack));
             }
         }
     }

@@ -42,10 +42,13 @@ export class MaterialCache {
         return this.getMaterial(key, () => TextureCache.getInstance().loadCardBackTexture(width, height));
     }
 
-    public getButtonMaterial(text: string, color: THREE.Color, width: number, height: number): THREE.Material {
-        const key = `${text}-${color.getHexString()}-${width}-${height}`;
-        const material = this.getMaterial(key, () => TextureCache.getInstance().loadButtonTexture(text, width, height));
-        material.color.set(color);
-        return material;
+    public getButtonMaterial(text: string, backgroundColor: string, textColor: string, width: number, height: number): THREE.Material {
+        const key = `${text}-${backgroundColor}-${textColor}-${width}-${height}`;
+        return this.getMaterial(key, () => TextureCache.getInstance().loadButtonTexture(text, backgroundColor, textColor, width, height));
+    }
+
+    public getPileMaterial(symbol: string, backgroundColor: string, symbolColor: string, width: number, height: number): THREE.Material {
+        const key = `${symbol}-${backgroundColor}-${symbolColor}-${width}-${height}`;
+        return this.getMaterial(key, () => TextureCache.getInstance().loadPileTexture(symbol, backgroundColor, symbolColor, width, height));
     }
 }

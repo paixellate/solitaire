@@ -3,6 +3,7 @@ import { createCardBackTexture, createCardTexture } from "./card";
 import { Suit } from "../core/cards/suit";
 import { Rank } from "../core/cards/rank";
 import { createButtonTexture } from "./button";
+import { createPileTexture } from "./pile";
 
 export class TextureCache {
     private static readonly instance: TextureCache = new TextureCache();
@@ -41,8 +42,13 @@ export class TextureCache {
         return this.getTexture(key, () => createCardBackTexture(width, height));
     }
 
-    public loadButtonTexture(text: string, width: number, height: number): THREE.Texture {
-        const key = `${text}-${width}-${height}`;
-        return this.getTexture(key, () => createButtonTexture(text, width, height));
+    public loadButtonTexture(text: string, backgroundColor: string, textColor: string, width: number, height: number): THREE.Texture {
+        const key = `${text}-${backgroundColor}-${textColor}-${width}-${height}`;
+        return this.getTexture(key, () => createButtonTexture(text, backgroundColor, textColor, width, height));
+    }
+
+    public loadPileTexture(symbol: string, backgroundColor: string, symbolColor: string, width: number, height: number): THREE.Texture {
+        const key = `${symbol}-${backgroundColor}-${symbolColor}-${width}-${height}`;
+        return this.getTexture(key, () => createPileTexture(symbol, backgroundColor, symbolColor, width, height));
     }
 }

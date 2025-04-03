@@ -1,4 +1,4 @@
-export function createButtonTexture(text: string, backgroundColor: string, textColor: string, width: number, height: number) {
+export function createPileTexture(symbol: string, backgroundColor: string, symbolColor: string, width: number, height: number) {
     const canvas = document.createElement("canvas");
     canvas.width = width;
     canvas.height = height;
@@ -6,23 +6,21 @@ export function createButtonTexture(text: string, backgroundColor: string, textC
 
     const borderWidth = 1;
 
-    // Draw dark background
+    // Draw white background
     ctx.fillStyle = backgroundColor;
     ctx.fillRect(0, 0, width, height);
 
     // // Draw border
-    ctx.strokeStyle = "#888";
+    ctx.strokeStyle = "#333";
     ctx.lineWidth = borderWidth;
     ctx.strokeRect(borderWidth, borderWidth, width - borderWidth * 2, height - borderWidth * 2);
 
-    // // Set text properties
-    ctx.fillStyle = textColor;
+    // Draw big symbol in center
+    ctx.font = `bold 72px Arial`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = `bold 24px Arial`;
-
-    // Draw rank and suit in top left
-    ctx.fillText(text, width / 2, height / 2);
+    ctx.fillStyle = symbolColor;
+    ctx.fillText(symbol, width / 2, height / 2);
 
     return canvas.toDataURL("image/png");
 }

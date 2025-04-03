@@ -5,10 +5,20 @@ import { getRankValue, Rank } from "../../cards/rank";
 import { Selections } from "../../rules/selection";
 import { Pile } from "../pile";
 import { BoardPile } from "./boardPile";
+import * as THREE from "three";
 
 export class FoundationPile extends Pile implements BoardPile {
-    constructor(index: number, width: number, height: number, position: vec3, faceUpOffset: vec2, faceDownOffset: vec2) {
-        super(index, width, height, position, faceUpOffset, faceDownOffset);
+    constructor(
+        index: number,
+        width: number,
+        height: number,
+        position: vec3,
+        faceUpOffset: vec2,
+        faceDownOffset: vec2,
+        materialFront: THREE.Material,
+        materialBack: THREE.Material
+    ) {
+        super(index, width, height, position, faceUpOffset, faceDownOffset, materialFront, materialBack);
     }
 
     public canAddCard(card: Card): boolean {
