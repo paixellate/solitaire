@@ -25,6 +25,10 @@ export class Card extends Rectangle {
         this.setLocalRotationY(Math.PI);
     }
 
+    public toString(): string {
+        return `${this.rank} of ${this.suit}`;
+    }
+
     public makeFaceUp(): Card {
         this.isFaceUp = true;
         this.setLocalRotationY(0);

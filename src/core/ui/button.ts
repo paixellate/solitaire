@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { Rectangle } from "../../mesh/reactangle";
 import { vec3 } from "../../vector";
 import { MaterialCache } from "../../texture/materialCache";
-import { Input } from "../input";
+import { Input } from "../../input";
 
 export class Button extends Rectangle {
     private material: THREE.Material;

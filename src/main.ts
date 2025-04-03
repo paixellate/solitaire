@@ -1,6 +1,9 @@
 import * as THREE from "three";
 import { Game } from "./core/game";
-import { Input } from "./core/input";
+import { Input } from "./input";
+import { Board } from "./core/board";
+import { History } from "./core/history";
+import { Controls } from "./core/ui/controls";
 import Stats from "stats.js";
 
 const stats = new Stats();
@@ -13,16 +16,7 @@ stats.showPanel(0);
 
 document.body.appendChild(stats.dom);
 
-let input: Input = {
-    mouse: {
-        position: new THREE.Vector2(),
-        isDown: false,
-        wasDown: false,
-    },
-    reset: () => {
-        input.mouse.wasDown = input.mouse.isDown;
-    },
-};
+const input = new Input();
 
 // Setup mouse event listeners
 window.addEventListener("mousemove", (event) => {
@@ -57,7 +51,7 @@ scene.add(ambientLight);
 
 camera.position.z = 500;
 
-const game = new Game();
+const game = new Game(new Board(), new History(), new Controls());
 game.addToScene(scene);
 
 function animate() {

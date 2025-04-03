@@ -7,15 +7,20 @@ import { MaterialCache } from "../../texture/materialCache";
 export class Deck {
     private cards: Card[];
 
-    constructor(width: number, height: number) {
-        this.cards = [];
+    constructor(width: number, height: number, cards?: Card[]) {
+        this.cards = cards || this.createCards(width, height);
+    }
+
+    private createCards(width: number, height: number): Card[] {
+        const cards: Card[] = [];
         for (const suit of Object.values(Suit)) {
             for (const rank of Object.values(Rank)) {
                 const materialFront = MaterialCache.getInstance().getCardMaterial(rank, suit, width, height);
                 const materialBack = MaterialCache.getInstance().getCardBackMaterial(width, height);
-                this.cards.push(new Card(rank, suit, width, height, vec3(0, 0, 0), materialFront, materialBack));
+                cards.push(new Card(rank, suit, width, height, vec3(0, 0, 0), materialFront, materialBack));
             }
         }
+        return cards;
     }
 
     public popOrThrow(): Card {

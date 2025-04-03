@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import { vec2, vec3 } from "../vector";
-import { Object } from "./object";
+import { GameObject } from "./gameObject";
 
-export class Rectangle extends Object {
+export class Rectangle extends GameObject {
     private readonly meshGroup: THREE.Group;
     private readonly meshFront: THREE.Mesh;
     private readonly meshBack: THREE.Mesh;

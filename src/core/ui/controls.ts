@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { vec3 } from "../../vector";
 import { Button } from "./button";
-import { Input } from "../input";
+import { Input } from "../../input";
 
 export enum Action {
     None,

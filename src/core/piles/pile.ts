@@ -28,6 +28,10 @@ export abstract class Pile extends Rectangle {
         this.setLocalPosition(position);
     }
 
+    public toString(): string {
+        return `${this.name} ${this.index}`;
+    }
+
     public getTopCardGlobalPosition(): vec3 {
         const topCard = this.getTopCard();
         if (topCard) {

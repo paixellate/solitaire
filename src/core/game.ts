@@ -1,13 +1,10 @@
 import * as THREE from "three";
-import { Input } from "./input";
+import { Input } from "../input";
 import { Board } from "./board";
-import { SelectionPile } from "./piles/selectionPile";
 import { History } from "./history";
-import { Selections } from "./rules/selection";
 import { Move } from "./rules/move";
-import { Button } from "./ui/button";
-import { vec3 } from "../vector";
-import { MaterialCache } from "../texture/materialCache";
+import { Selections } from "./rules/selection";
+import { SelectionPile } from "./piles/selectionPile";
 import { Action, Controls } from "./ui/controls";
 
 export class Game {
@@ -17,11 +14,11 @@ export class Game {
     private selection: Selections | null = null;
     private readonly controls: Controls;
 
-    constructor() {
-        this.board = new Board();
+    constructor(board: Board, history: History, controls: Controls) {
+        this.board = board;
         this.selectionPile = this.board.createSelectionPile();
-        this.history = new History();
-        this.controls = new Controls();
+        this.history = history;
+        this.controls = controls;
     }
 
     public addToScene(scene: THREE.Scene): void {
