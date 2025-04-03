@@ -1,11 +1,10 @@
 import { vec3 } from "../../vector";
-import { MaterialManager } from "../../texture";
 import { Rank } from "./rank";
 import { Suit } from "./suit";
 import { Rectangle } from "../../mesh/reactangle";
+import { MaterialCache } from "../../texture/materialCache";
 
 export class Card extends Rectangle {
-    private readonly name: string;
     public readonly rank: Rank;
     public readonly suit: Suit;
     public isFaceUp: boolean = false;
@@ -14,12 +13,11 @@ export class Card extends Rectangle {
         super(
             width,
             height,
-            MaterialManager.getInstance().getMaterial(rank, suit, width, height),
-            MaterialManager.getInstance().getCardBackMaterial(width, height)
+            MaterialCache.getInstance().getCardMaterial(rank, suit, width, height),
+            MaterialCache.getInstance().getCardBackMaterial(width, height)
         );
         this.rank = rank;
         this.suit = suit;
-        this.name = `${rank} of ${suit}`;
         this.setLocalPosition(position);
         this.setLocalRotationY(Math.PI);
     }

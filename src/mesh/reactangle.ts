@@ -40,4 +40,12 @@ export class Rectangle extends Object {
         const box = new THREE.Box3().setFromCenterAndSize(position, size);
         return box.containsPoint(vec3(mousePosition.x, mousePosition.y, (box.min.z + box.max.z) / 2));
     }
+
+    public setFrontMaterials(material: THREE.Material): void {
+        this.meshFront.material = material;
+    }
+
+    public setBackMaterials(materials: THREE.Material[]): void {
+        this.meshBack.material = materials;
+    }
 }
