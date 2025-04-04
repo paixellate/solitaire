@@ -11,8 +11,8 @@ export enum Action {
 export class Controls {
     private readonly undo: Button;
 
-    constructor() {
-        this.undo = new Button("↶", 50, 50, vec3(-600, 0, 0));
+    constructor(undoButton: Button) {
+        this.undo = undoButton;
     }
 
     public addToScene(scene: THREE.Scene): void {

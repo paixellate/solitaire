@@ -32,7 +32,7 @@ export class SelectionPile extends Pile {
         }
     }
 
-    public setSelection(selection: Selections | null): void {
+    public set(selection: Selections | null): void {
         if (selection) {
             if (selection.isSourceTableauPile()) {
                 this.addCards(selection.cards.slice().reverse(), this.offsetFaceUp, this.offsetFaceUp);

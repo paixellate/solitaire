@@ -1,10 +1,8 @@
 import * as THREE from "three";
 import { Game } from "./core/game";
 import { Input } from "./input";
-import { Board } from "./core/board";
-import { History } from "./core/history";
-import { Controls } from "./core/ui/controls";
 import Stats from "stats.js";
+import { createBoard, createControls, createDeck, dealCards, setupBoard } from "./core/setup";
 
 const stats = new Stats();
 // the number will decide which information will be displayed
@@ -51,7 +49,12 @@ scene.add(ambientLight);
 
 camera.position.z = 500;
 
-const game = new Game(new Board(), new History(), new Controls());
+const board = createBoard();
+setupBoard(board);
+const deck = createDeck();
+dealCards(deck, board.stockPile, board.tableauPiles);
+
+const game = new Game(board, createControls());
 game.addToScene(scene);
 
 function animate() {
@@ -60,9 +63,7 @@ function animate() {
     stats.begin();
     game.mainLoop(input);
 
-    // Render the scene
     renderer.render(scene, camera);
-    input.reset();
     stats.end();
 }
 

@@ -21,16 +21,3 @@ export function getSuitColor(suit: Suit): "red" | "black" {
 export function isOppositeColor(suit1: Suit, suit2: Suit): boolean {
     return getSuitColor(suit1) !== getSuitColor(suit2);
 }
-
-export function getSuitName(suit: Suit): string {
-    switch (suit) {
-        case Suit.HEARTS:
-            return "hearts";
-        case Suit.DIAMONDS:
-            return "diamonds";
-        case Suit.CLUBS:
-            return "clubs";
-        case Suit.SPADES:
-            return "spades";
-    }
-}

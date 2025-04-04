@@ -7,6 +7,10 @@ export class History {
         this.moves = [];
     }
 
+    public getNumberOfMoves(): number {
+        return this.moves.length;
+    }
+
     public addMove(move: Move) {
         this.moves.push(move);
     }

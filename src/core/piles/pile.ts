@@ -58,6 +58,10 @@ export abstract class Pile extends Rectangle {
         return this.cards.filter((card) => card.isFaceUp);
     }
 
+    public test_getAllCards(): Card[] {
+        return this.cards.slice();
+    }
+
     public isEmpty(): boolean {
         return this.cards.length === 0;
     }

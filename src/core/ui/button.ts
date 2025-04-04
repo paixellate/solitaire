@@ -26,7 +26,6 @@ export class Button extends Rectangle {
             } else {
                 this.setFrontMaterials(this.materialOver);
                 if (input.mouse.wasDown) {
-                    console.log("Button clicked");
                     return true;
                 }
             }
