@@ -4,10 +4,10 @@ import { Pile } from "../pile";
 import { isOppositeColor } from "../../cards/suit";
 import { vec2, vec3 } from "../../../vector";
 import { Selections } from "../../rules/selection";
-import { BoardPile } from "./boardPile";
+import { InteractivePile } from "../interactivePile";
 import * as THREE from "three";
 
-export class TableauPile extends Pile implements BoardPile {
+export class TableauPile extends Pile implements InteractivePile {
     constructor(
         index: number,
         planeGeometry: THREE.PlaneGeometry,

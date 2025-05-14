@@ -19,7 +19,8 @@ export class Deck {
                 const materialFront = MaterialCache.getInstance().getCardMaterial(rank, suit, width, height);
                 const materialBack = MaterialCache.getInstance().getCardBackMaterial(width, height);
                 const planeGeometry = new THREE.PlaneGeometry(width, height);
-                cards.push(new Card(rank, suit, planeGeometry, vec3(0, 0, 0), materialFront, materialBack));
+                const card = new Card(rank, suit, planeGeometry, vec3(0, 0, 0), materialFront, materialBack);
+                cards.push(card);
             }
         }
         return cards;

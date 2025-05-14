@@ -1,8 +1,8 @@
 import { vec3 } from "../vector";
-import { TableauPile } from "./piles/board/tableauPile";
-import { WastePile } from "./piles/board/wastePile";
-import { StockPile } from "./piles/board/stockPile";
-import { FoundationPile } from "./piles/board/foundationPile";
+import { TableauPile } from "./piles/concrete/tableauPile";
+import { WastePile } from "./piles/concrete/wastePile";
+import { StockPile } from "./piles/concrete/stockPile";
+import { FoundationPile } from "./piles/concrete/foundationPile";
 import * as THREE from "three";
 import { Rectangle } from "../mesh/reactangle";
 import { SelectionPile } from "./piles/selectionPile";

@@ -1,11 +1,11 @@
 import { MaterialCache } from "../texture/materialCache";
-import { StockPile } from "../core/piles/board/stockPile";
-import { TableauPile } from "../core/piles/board/tableauPile";
-import { WastePile } from "../core/piles/board/wastePile";
+import { StockPile } from "../core/piles/concrete/stockPile";
+import { TableauPile } from "../core/piles/concrete/tableauPile";
+import { WastePile } from "../core/piles/concrete/wastePile";
 import { SelectionPile } from "../core/piles/selectionPile";
 import * as THREE from "three";
 import { vec2, vec3 } from "../vector";
-import { FoundationPile } from "../core/piles/board/foundationPile";
+import { FoundationPile } from "../core/piles/concrete/foundationPile";
 import { Deck } from "../core/cards/deck";
 import { Board } from "../core/board";
 import { History } from "../core/history";

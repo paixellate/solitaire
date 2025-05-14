@@ -2,10 +2,10 @@ import { vec2, vec3 } from "../../vector";
 import { Board } from "../board";
 import { Card } from "../cards/card";
 import { Pile } from "../piles/pile";
-import { StockPile } from "../piles/board/stockPile";
-import { WastePile } from "../piles/board/wastePile";
-import { FoundationPile } from "../piles/board/foundationPile";
-import { TableauPile } from "../piles/board/tableauPile";
+import { StockPile } from "../piles/concrete/stockPile";
+import { WastePile } from "../piles/concrete/wastePile";
+import { FoundationPile } from "../piles/concrete/foundationPile";
+import { TableauPile } from "../piles/concrete/tableauPile";
 
 export class Selections {
     public readonly cards: Card[];

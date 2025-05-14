@@ -8,7 +8,7 @@ import { TestSetup } from "./testSetup";
 import { getRankValue, Rank } from "../core/cards/rank";
 import { Controls } from "../core/ui/controls";
 import { isOppositeColor, Suit } from "../core/cards/suit";
-import { TableauPile } from "../core/piles/board/tableauPile";
+import { TableauPile } from "../core/piles/concrete/tableauPile";
 import { Game } from "../core/game";
 import { Button } from "../core/ui/button";
 

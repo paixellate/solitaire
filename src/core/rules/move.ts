@@ -1,8 +1,8 @@
 import { vec2 } from "../../vector";
 import { Board } from "../board";
 import { Pile } from "../piles/pile";
-import { WastePile } from "../piles/board/wastePile";
-import { StockPile } from "../piles/board/stockPile";
+import { WastePile } from "../piles/concrete/wastePile";
+import { StockPile } from "../piles/concrete/stockPile";
 import { Selections } from "./selection";
 
 export class Move {

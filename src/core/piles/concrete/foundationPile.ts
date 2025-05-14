@@ -4,10 +4,10 @@ import { Card } from "../../cards/card";
 import { getRankValue, Rank } from "../../cards/rank";
 import { Selections } from "../../rules/selection";
 import { Pile } from "../pile";
-import { BoardPile } from "./boardPile";
+import { InteractivePile } from "../interactivePile";
 import * as THREE from "three";
 
-export class FoundationPile extends Pile implements BoardPile {
+export class FoundationPile extends Pile implements InteractivePile {
     constructor(
         index: number,
         planeGeometry: THREE.PlaneGeometry,
