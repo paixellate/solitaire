@@ -3,6 +3,7 @@ import { Suit } from "./suit";
 import { Rank } from "./rank";
 import { vec3 } from "../../vector";
 import { MaterialCache } from "../../texture/materialCache";
+import * as THREE from "three";
 
 export class Deck {
     private cards: Card[];
@@ -17,7 +18,8 @@ export class Deck {
             for (const rank of Object.values(Rank)) {
                 const materialFront = MaterialCache.getInstance().getCardMaterial(rank, suit, width, height);
                 const materialBack = MaterialCache.getInstance().getCardBackMaterial(width, height);
-                cards.push(new Card(rank, suit, width, height, vec3(0, 0, 0), materialFront, materialBack));
+                const planeGeometry = new THREE.PlaneGeometry(width, height);
+                cards.push(new Card(rank, suit, planeGeometry, vec3(0, 0, 0), materialFront, materialBack));
             }
         }
         return cards;

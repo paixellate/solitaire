@@ -11,7 +11,8 @@ export class Button extends Rectangle {
 
     constructor(text: string, width: number, height: number, position: vec3) {
         const buttonMaterial = MaterialCache.getInstance().getButtonMaterial(text, "#333", "#fff", width, height);
-        super(width, height, buttonMaterial, buttonMaterial);
+        const plane = new THREE.PlaneGeometry(width, height);
+        super(plane, buttonMaterial, buttonMaterial);
 
         this.material = buttonMaterial;
         this.materialOver = MaterialCache.getInstance().getButtonMaterial(text, "#666", "#fff", width, height);

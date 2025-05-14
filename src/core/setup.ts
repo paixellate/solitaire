@@ -39,9 +39,9 @@ export function createBoard(): Board {
     const foundationPiles = createFoundationPiles(vec3(-500, 350, 0), 50);
     const selectionPile = createSelectionPile();
     const history = new History();
+    const planeGeometry = new THREE.PlaneGeometry(BOARD_WIDTH, BOARD_HEIGHT);
     return new Board(
-        BOARD_WIDTH,
-        BOARD_HEIGHT,
+        planeGeometry,
         vec3(0, 0, -100),
         history,
         material,
@@ -65,7 +65,8 @@ export function createSelectionPile(): SelectionPile {
     const material = new THREE.MeshBasicMaterial({ color: BOARD_COLOR });
     material.transparent = true;
     material.opacity = 0.0;
-    return new SelectionPile(0, CARD_WIDTH, CARD_HEIGHT, vec3(0, 0, 0), STACK_OFFSET_FACE_UP, STACK_OFFSET_HIDDEN, material, material);
+    const planeGeometry = new THREE.PlaneGeometry(CARD_WIDTH, CARD_HEIGHT);
+    return new SelectionPile(0, planeGeometry, vec3(0, 0, 0), STACK_OFFSET_FACE_UP, STACK_OFFSET_HIDDEN, material, material);
 }
 
 export function createStockPile(positionOffset: vec3, wastePile: WastePile): StockPile {
@@ -83,10 +84,10 @@ export function createStockPile(positionOffset: vec3, wastePile: WastePile): Sto
         CARD_WIDTH,
         CARD_HEIGHT
     );
+    const planeGeometry = new THREE.PlaneGeometry(CARD_WIDTH, CARD_HEIGHT);
     return new StockPile(
         1,
-        CARD_WIDTH,
-        CARD_HEIGHT,
+        planeGeometry,
         vec3(positionOffset.x + CARD_WIDTH / 2, positionOffset.y - CARD_HEIGHT / 2, positionOffset.z),
         STACK_OFFSET_FACE_UP,
         STACK_OFFSET_HIDDEN,
@@ -105,10 +106,10 @@ export function createWastePile(positionOffset: vec3): WastePile {
         CARD_HEIGHT
     );
     const materialBack = MaterialCache.getInstance().getPileMaterial("", PILE_BACKGROUND_COLOR, PILE_SYMBOL_COLOR, CARD_WIDTH, CARD_HEIGHT);
+    const planeGeometry = new THREE.PlaneGeometry(CARD_WIDTH, CARD_HEIGHT);
     return new WastePile(
         2,
-        CARD_WIDTH,
-        CARD_HEIGHT,
+        planeGeometry,
         vec3(positionOffset.x + CARD_WIDTH / 2, positionOffset.y - CARD_HEIGHT / 2, positionOffset.z),
         STACK_OFFSET_HIDDEN,
         STACK_OFFSET_HIDDEN,
@@ -132,12 +133,11 @@ export function createTableauPiles(positionOffset: vec3, spacing: number): Table
         CARD_WIDTH,
         CARD_HEIGHT
     );
-
+    const planeGeometry = new THREE.PlaneGeometry(CARD_WIDTH, CARD_HEIGHT);
     function create(index: number, position: vec3): TableauPile {
         return new TableauPile(
             index,
-            CARD_WIDTH,
-            CARD_HEIGHT,
+            planeGeometry,
             position,
             STACK_OFFSET_FACE_UP,
             STACK_OFFSET_FACE_DOWN,
@@ -172,12 +172,11 @@ export function createFoundationPiles(positionOffset: vec3, spacing: number): Fo
         CARD_WIDTH,
         CARD_HEIGHT
     );
-
+    const planeGeometry = new THREE.PlaneGeometry(CARD_WIDTH, CARD_HEIGHT);
     function create(index: number, position: vec3): FoundationPile {
         return new FoundationPile(
             index,
-            CARD_WIDTH,
-            CARD_HEIGHT,
+            planeGeometry,
             position,
             STACK_OFFSET_HIDDEN,
             STACK_OFFSET_HIDDEN,

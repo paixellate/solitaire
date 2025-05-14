@@ -41,9 +41,9 @@ export namespace TestSetup {
         const foundationPiles = test_createFoundationPiles(vec3(-500, 350, 0), 50);
         const selectionPile = test_createSelectionPile();
         const history = new History();
+        const planeGeometry = new THREE.PlaneGeometry(TEST_BOARD_WIDTH, TEST_BOARD_HEIGHT);
         return new Board(
-            TEST_BOARD_WIDTH,
-            TEST_BOARD_HEIGHT,
+            planeGeometry,
             vec3(0, 0, -100),
             history,
             material,
@@ -67,10 +67,10 @@ export namespace TestSetup {
         const material = new THREE.MeshBasicMaterial({ color: TEST_BOARD_COLOR });
         material.transparent = true;
         material.opacity = 0.0;
+        const planeGeometry = new THREE.PlaneGeometry(TEST_CARD_WIDTH, TEST_CARD_HEIGHT);
         return new SelectionPile(
             0,
-            TEST_CARD_WIDTH,
-            TEST_CARD_HEIGHT,
+            planeGeometry,
             vec3(0, 0, 0),
             TEST_STACK_OFFSET_FACE_UP,
             TEST_STACK_OFFSET_HIDDEN,
@@ -94,10 +94,10 @@ export namespace TestSetup {
             TEST_CARD_WIDTH,
             TEST_CARD_HEIGHT
         );
+        const planeGeometry = new THREE.PlaneGeometry(TEST_CARD_WIDTH, TEST_CARD_HEIGHT);
         return new StockPile(
             1,
-            TEST_CARD_WIDTH,
-            TEST_CARD_HEIGHT,
+            planeGeometry,
             vec3(positionOffset.x + TEST_CARD_WIDTH / 2, positionOffset.y - TEST_CARD_HEIGHT / 2, positionOffset.z),
             TEST_STACK_OFFSET_FACE_UP,
             TEST_STACK_OFFSET_HIDDEN,
@@ -122,10 +122,10 @@ export namespace TestSetup {
             TEST_CARD_WIDTH,
             TEST_CARD_HEIGHT
         );
+        const planeGeometry = new THREE.PlaneGeometry(TEST_CARD_WIDTH, TEST_CARD_HEIGHT);
         return new WastePile(
             2,
-            TEST_CARD_WIDTH,
-            TEST_CARD_HEIGHT,
+            planeGeometry,
             vec3(positionOffset.x + TEST_CARD_WIDTH / 2, positionOffset.y - TEST_CARD_HEIGHT / 2, positionOffset.z),
             TEST_STACK_OFFSET_HIDDEN,
             TEST_STACK_OFFSET_HIDDEN,
@@ -149,12 +149,11 @@ export namespace TestSetup {
             TEST_CARD_WIDTH,
             TEST_CARD_HEIGHT
         );
-
+        const planeGeometry = new THREE.PlaneGeometry(TEST_CARD_WIDTH, TEST_CARD_HEIGHT);
         function create(index: number, position: vec3): TableauPile {
             return new TableauPile(
                 index,
-                TEST_CARD_WIDTH,
-                TEST_CARD_HEIGHT,
+                planeGeometry,
                 position,
                 TEST_STACK_OFFSET_FACE_UP,
                 TEST_STACK_OFFSET_FACE_DOWN,
@@ -210,12 +209,11 @@ export namespace TestSetup {
             TEST_CARD_WIDTH,
             TEST_CARD_HEIGHT
         );
-
+        const planeGeometry = new THREE.PlaneGeometry(TEST_CARD_WIDTH, TEST_CARD_HEIGHT);
         function create(index: number, position: vec3): FoundationPile {
             return new FoundationPile(
                 index,
-                TEST_CARD_WIDTH,
-                TEST_CARD_HEIGHT,
+                planeGeometry,
                 position,
                 TEST_STACK_OFFSET_HIDDEN,
                 TEST_STACK_OFFSET_HIDDEN,

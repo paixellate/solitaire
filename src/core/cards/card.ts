@@ -12,13 +12,12 @@ export class Card extends Rectangle {
     constructor(
         rank: Rank,
         suit: Suit,
-        width: number,
-        height: number,
+        planeGeometry: THREE.PlaneGeometry,
         position: vec3,
         materialFront: THREE.Material,
         materialBack: THREE.Material
     ) {
-        super(width, height, materialFront, materialBack);
+        super(planeGeometry, materialFront, materialBack);
         this.rank = rank;
         this.suit = suit;
         this.setLocalPosition(position);

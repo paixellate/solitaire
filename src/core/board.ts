@@ -22,8 +22,7 @@ export class Board extends Rectangle {
     public selection: Selections | null = null;
 
     constructor(
-        width: number,
-        height: number,
+        planeGeometry: THREE.PlaneGeometry,
         position: vec3,
         history: History,
         material: THREE.Material,
@@ -33,7 +32,7 @@ export class Board extends Rectangle {
         foundationPiles: FoundationPile[],
         selectionPile: SelectionPile
     ) {
-        super(width, height, material, material);
+        super(planeGeometry, material, material);
         this.setLocalPosition(position);
         this.history = history;
         this.wastePile = wastePile;

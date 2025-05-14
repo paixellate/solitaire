@@ -10,15 +10,14 @@ import * as THREE from "three";
 export class FoundationPile extends Pile implements BoardPile {
     constructor(
         index: number,
-        width: number,
-        height: number,
+        planeGeometry: THREE.PlaneGeometry,
         position: vec3,
         faceUpOffset: vec2,
         faceDownOffset: vec2,
         materialFront: THREE.Material,
         materialBack: THREE.Material
     ) {
-        super(index, width, height, position, faceUpOffset, faceDownOffset, materialFront, materialBack);
+        super(index, planeGeometry, position, faceUpOffset, faceDownOffset, materialFront, materialBack);
     }
 
     public canAddCard(card: Card): boolean {

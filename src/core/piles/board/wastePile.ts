@@ -7,15 +7,14 @@ import * as THREE from "three";
 export class WastePile extends Pile implements BoardPile {
     constructor(
         index: number,
-        width: number,
-        height: number,
+        planeGeometry: THREE.PlaneGeometry,
         position: vec3,
         offsetFaceUp: vec2,
         offsetFaceDown: vec2,
         materialFront: THREE.Material,
         materialBack: THREE.Material
     ) {
-        super(index, width, height, position, offsetFaceUp, offsetFaceDown, materialFront, materialBack);
+        super(index, planeGeometry, position, offsetFaceUp, offsetFaceDown, materialFront, materialBack);
     }
 
     public popSelectedCards(mousePosition: vec2): Selections | null {

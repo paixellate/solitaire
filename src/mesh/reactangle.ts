@@ -8,15 +8,10 @@ export class Rectangle extends GameObject {
     private readonly meshBack: THREE.Mesh;
     private readonly planeGeometry: THREE.PlaneGeometry;
 
-    public readonly width: number;
-    public readonly height: number;
-
-    constructor(width: number, height: number, materialFront: THREE.Material, materialBack: THREE.Material) {
+    constructor(plane: THREE.PlaneGeometry, materialFront: THREE.Material, materialBack: THREE.Material) {
         super();
-        this.width = width;
-        this.height = height;
+        this.planeGeometry = plane;
 
-        this.planeGeometry = new THREE.PlaneGeometry(width, height);
         materialBack.side = THREE.BackSide;
         materialFront.side = THREE.FrontSide;
 
@@ -40,6 +35,14 @@ export class Rectangle extends GameObject {
         this.planeGeometry.computeBoundingBox();
         const box = this.planeGeometry.boundingBox!;
         return box.containsPoint(vec3(mousePosition.x - position.x, mousePosition.y - position.y, 0));
+    }
+
+    public getWidth(): number {
+        return this.planeGeometry.parameters.width;
+    }
+
+    public getHeight(): number {
+        return this.planeGeometry.parameters.height;
     }
 
     public setFrontMaterials(material: THREE.Material): void {

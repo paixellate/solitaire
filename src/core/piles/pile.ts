@@ -13,15 +13,14 @@ export abstract class Pile extends Rectangle {
 
     constructor(
         index: number,
-        width: number,
-        height: number,
+        planeGeometry: THREE.PlaneGeometry,
         position: vec3,
         faceUpOffset: vec2,
         faceDownOffset: vec2,
         materialFront: THREE.Material,
         materialBack: THREE.Material
     ) {
-        super(width, height, materialFront, materialBack);
+        super(planeGeometry, materialFront, materialBack);
         this.index = index;
         this.offsetFaceUp = faceUpOffset;
         this.offsetFaceDown = faceDownOffset;
@@ -74,11 +73,11 @@ export abstract class Pile extends Rectangle {
         const topCard = this.getTopCard();
         if (topCard) {
             if (topCard.isFaceUp) {
-                const position = vec3(this.width * faceUpOffset.x, this.height * faceUpOffset.y, 1);
+                const position = vec3(this.getWidth() * faceUpOffset.x, this.getHeight() * faceUpOffset.y, 1);
                 card.setLocalPosition(position);
                 card.addToObject(topCard);
             } else {
-                const position = vec3(this.width * faceDownOffset.x, this.height * faceDownOffset.y, 1);
+                const position = vec3(this.getWidth() * faceDownOffset.x, this.getHeight() * faceDownOffset.y, 1);
                 card.setLocalPosition(position);
                 card.addToObject(topCard);
             }

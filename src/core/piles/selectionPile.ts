@@ -9,15 +9,14 @@ export class SelectionPile extends Pile {
 
     constructor(
         index: number,
-        width: number,
-        height: number,
+        planeGeometry: THREE.PlaneGeometry,
         position: vec3,
         offsetFaceUp: vec2,
         offsetFaceDown: vec2,
         materialFront: THREE.Material,
         materialBack: THREE.Material
     ) {
-        super(index, width, height, position, offsetFaceUp, offsetFaceDown, materialFront, materialBack);
+        super(index, planeGeometry, position, offsetFaceUp, offsetFaceDown, materialFront, materialBack);
     }
 
     public setSelectionCardPosition(mousePosition: vec2, position: vec3): void {

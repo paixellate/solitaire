@@ -10,8 +10,7 @@ export class StockPile extends Pile implements BoardPile {
 
     constructor(
         index: number,
-        width: number,
-        height: number,
+        planeGeometry: THREE.PlaneGeometry,
         position: vec3,
         offsetFaceUp: vec2,
         offsetFaceDown: vec2,
@@ -19,7 +18,7 @@ export class StockPile extends Pile implements BoardPile {
         materialBack: THREE.Material,
         wastePile: WastePile
     ) {
-        super(index, width, height, position, offsetFaceUp, offsetFaceDown, materialFront, materialBack);
+        super(index, planeGeometry, position, offsetFaceUp, offsetFaceDown, materialFront, materialBack);
         this.wastePile = wastePile;
     }
 
