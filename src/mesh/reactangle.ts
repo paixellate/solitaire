@@ -6,6 +6,7 @@ export class Rectangle extends GameObject {
     private readonly meshGroup: THREE.Group;
     private readonly meshFront: THREE.Mesh;
     private readonly meshBack: THREE.Mesh;
+    private readonly planeGeometry: THREE.PlaneGeometry;
 
     public readonly width: number;
     public readonly height: number;
@@ -15,12 +16,12 @@ export class Rectangle extends GameObject {
         this.width = width;
         this.height = height;
 
-        const planeGeometry = new THREE.PlaneGeometry(width, height);
+        this.planeGeometry = new THREE.PlaneGeometry(width, height);
         materialBack.side = THREE.BackSide;
         materialFront.side = THREE.FrontSide;
 
-        this.meshFront = new THREE.Mesh(planeGeometry, materialFront);
-        this.meshBack = new THREE.Mesh(planeGeometry, materialBack);
+        this.meshFront = new THREE.Mesh(this.planeGeometry, materialFront);
+        this.meshBack = new THREE.Mesh(this.planeGeometry, materialBack);
         this.meshBack.position.z = -0.01;
 
         this.meshGroup = new THREE.Group();
@@ -36,9 +37,9 @@ export class Rectangle extends GameObject {
 
     public getIsMouseOver(mousePosition: vec2): boolean {
         const position = this.getGlobalPosition();
-        const size = vec3(this.width, this.height, 0);
-        const box = new THREE.Box3().setFromCenterAndSize(position, size);
-        return box.containsPoint(vec3(mousePosition.x, mousePosition.y, (box.min.z + box.max.z) / 2));
+        this.planeGeometry.computeBoundingBox();
+        const box = this.planeGeometry.boundingBox!;
+        return box.containsPoint(vec3(mousePosition.x - position.x, mousePosition.y - position.y, 0));
     }
 
     public setFrontMaterials(material: THREE.Material): void {
