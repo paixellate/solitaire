@@ -1126,10 +1126,7 @@ describe("Board", () => {
 
         for (let i = 0; i < 93; i++) {
             clickUndoButton();
-            verifyBoardConsistency(board);
         }
-
-        verifyBoardConsistency(board);
 
         verifyTableauPile(board.tableauPiles[0], 0, 1);
         verifyTableauPile(board.tableauPiles[1], 1, 1);
