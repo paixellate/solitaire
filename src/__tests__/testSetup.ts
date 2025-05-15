@@ -9,9 +9,9 @@ import { FoundationPile } from "../core/piles/concrete/foundationPile";
 import { Deck } from "../core/cards/deck";
 import { Board } from "../core/board";
 import { History } from "../core/history";
-import { dealCards } from "../core/setup";
 import { Controls } from "../core/ui/controls";
 import { Button } from "../core/ui/button";
+
 
 export namespace TestSetup {
     const TEST_STACK_OFFSET_FACE_UP = vec2(0, -0.2);
@@ -42,7 +42,7 @@ export namespace TestSetup {
         const selectionPile = test_createSelectionPile();
         const history = new History();
         const planeGeometry = new THREE.PlaneGeometry(TEST_BOARD_WIDTH, TEST_BOARD_HEIGHT);
-        return new Board(
+        const board = new Board(
             planeGeometry,
             vec3(0, 0, -100),
             history,
@@ -53,14 +53,24 @@ export namespace TestSetup {
             foundationPiles,
             selectionPile
         );
-    }
-
-    export function test_setupBoard(board: Board): void {
         board.wastePile.addToObject(board);
         board.stockPile.addToObject(board);
         board.tableauPiles.forEach((pile) => pile.addToObject(board));
         board.foundationPiles.forEach((pile) => pile.addToObject(board));
         board.selectionPile.addToObject(board);
+        return board;
+    }
+
+    export function test_setupBoard(board: Board): void {
+    
+        const deck = new Deck(TEST_CARD_WIDTH, TEST_CARD_HEIGHT);
+        for (let i = 0; i < 7; i++) {
+            for (let j = 0; j < i + 1; j++) {
+                board.tableauPiles[i].addCard(deck.popOrThrow());
+            }
+        }
+        board.stockPile.addCardsReversed(deck.popAllCards());
+        board.tableauPiles.forEach((pile) => pile.getTopCardOrThrow().makeFaceUp());
     }
 
     export function test_createSelectionPile(): SelectionPile {
@@ -242,11 +252,4 @@ export namespace TestSetup {
         ];
     }
 
-    export function test_createDeck(): Deck {
-        return new Deck(TEST_CARD_WIDTH, TEST_CARD_HEIGHT);
-    }
-
-    export function test_dealCards(deck: Deck, stockPile: StockPile, tableauPiles: TableauPile[]): void {
-        dealCards(deck, stockPile, tableauPiles);
-    }
 }

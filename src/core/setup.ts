@@ -1,48 +1,54 @@
 import { MaterialCache } from "../texture/materialCache";
-import { StockPile } from "./piles/board/stockPile";
-import { TableauPile } from "./piles/board/tableauPile";
-import { WastePile } from "./piles/board/wastePile";
+import { StockPile } from "./piles/concrete/stockPile";
+import { TableauPile } from "./piles/concrete/tableauPile";
+import { WastePile } from "./piles/concrete/wastePile";
 import { SelectionPile } from "./piles/selectionPile";
 import * as THREE from "three";
 import { vec2, vec3 } from "../vector";
-import { FoundationPile } from "./piles/board/foundationPile";
+import { FoundationPile } from "./piles/concrete/foundationPile";
 import { Deck } from "./cards/deck";
 import { Board } from "./board";
 import { History } from "./history";
 import { Controls } from "./ui/controls";
 import { Button } from "./ui/button";
+import { createBoardMaterial, createStockPileMaterial, createWastePileMaterial, createTableauPileMaterial, createFoundationPileMaterial, createSelectionPileMaterial } from "../material/materials";
 
 const STACK_OFFSET_FACE_UP = vec2(0, -0.2);
 const STACK_OFFSET_FACE_DOWN = vec2(0, -0.04);
 const STACK_OFFSET_HIDDEN = vec2(0.001, -0.001);
 
-const BOARD_COLOR = "#060";
-const PILE_BACKGROUND_COLOR = "#040";
-const PILE_SYMBOL_COLOR = "#030";
+const CARD_WIDTH = 100;
+const CARD_HEIGHT = 140;
 
 const BOARD_WIDTH = 1200;
 const BOARD_HEIGHT = 800;
+const BOARD_POSITION = vec3(0, 0, -100);
 
-const CARD_WIDTH = 100;
-const CARD_HEIGHT = 140;
+const WASTE_PILE_POSITION = vec3(250, 350, 0);
+const STOCK_PILE_POSITION = vec3(400, 350, 0);
+const TABLEAU_PILES_POSITION = vec3(-500, 150, 0);
+const FOUNDATION_PILES_POSITION = vec3(-500, 350, 0);
+const SELECTION_PILE_POSITION = vec3(0, 0, 0);
 
 export function createControls(): Controls {
     return new Controls(new Button("↶", 50, 50, vec3(-600, 0, 0)));
 }
 
-export function createBoard(): Board {
-    const material = new THREE.MeshBasicMaterial({ color: BOARD_COLOR });
 
-    const wastePile = createWastePile(vec3(250, 350, 0));
-    const stockPile = createStockPile(vec3(400, 350, 0), wastePile);
-    const tableauPiles = createTableauPiles(vec3(-500, 150, 0), 50);
-    const foundationPiles = createFoundationPiles(vec3(-500, 350, 0), 50);
-    const selectionPile = createSelectionPile();
-    const history = new History();
+export function createBoard(): Board {
+
     const planeGeometry = new THREE.PlaneGeometry(BOARD_WIDTH, BOARD_HEIGHT);
-    return new Board(
+    const history = new History();
+    const material = createBoardMaterial();
+
+    const wastePile = createWastePile(CARD_WIDTH, CARD_HEIGHT, WASTE_PILE_POSITION);
+    const stockPile = createStockPile(CARD_WIDTH, CARD_HEIGHT, STOCK_PILE_POSITION, wastePile);
+    const tableauPiles = createTableauPiles(CARD_WIDTH, CARD_HEIGHT, TABLEAU_PILES_POSITION, 50);
+    const foundationPiles = createFoundationPiles(CARD_WIDTH, CARD_HEIGHT, FOUNDATION_PILES_POSITION, 50);
+    const selectionPile = createSelectionPile(CARD_WIDTH, CARD_HEIGHT, SELECTION_PILE_POSITION);
+    const board = new Board(
         planeGeometry,
-        vec3(0, 0, -100),
+        BOARD_POSITION,
         history,
         material,
         wastePile,
@@ -51,40 +57,36 @@ export function createBoard(): Board {
         foundationPiles,
         selectionPile
     );
+    wastePile.addToObject(board);
+    stockPile.addToObject(board);
+    tableauPiles.forEach((pile) => pile.addToObject(board));
+    foundationPiles.forEach((pile) => pile.addToObject(board));
+    selectionPile.addToObject(board);
+    return board;
 }
 
 export function setupBoard(board: Board): void {
-    board.wastePile.addToObject(board);
-    board.stockPile.addToObject(board);
-    board.tableauPiles.forEach((pile) => pile.addToObject(board));
-    board.foundationPiles.forEach((pile) => pile.addToObject(board));
-    board.selectionPile.addToObject(board);
+
+    const deck = new Deck(CARD_WIDTH, CARD_HEIGHT);
+    for (let i = 0; i < 7; i++) {
+        for (let j = 0; j < i + 1; j++) {
+            board.tableauPiles[i].addCard(deck.popOrThrow());
+        }
+    }
+    board.stockPile.addCardsReversed(deck.popAllCards());
+    board.tableauPiles.forEach((pile) => pile.getTopCardOrThrow().makeFaceUp());
 }
 
-export function createSelectionPile(): SelectionPile {
-    const material = new THREE.MeshBasicMaterial({ color: BOARD_COLOR });
-    material.transparent = true;
-    material.opacity = 0.0;
-    const planeGeometry = new THREE.PlaneGeometry(CARD_WIDTH, CARD_HEIGHT);
-    return new SelectionPile(0, planeGeometry, vec3(0, 0, 0), STACK_OFFSET_FACE_UP, STACK_OFFSET_HIDDEN, material, material);
+function createSelectionPile(width: number, height: number, positionOffset: vec3): SelectionPile {
+    const material = createSelectionPileMaterial(width, height);
+    const planeGeometry = new THREE.PlaneGeometry(width, height);
+    return new SelectionPile(0, planeGeometry, positionOffset, STACK_OFFSET_FACE_UP, STACK_OFFSET_HIDDEN, material, material);
 }
 
-export function createStockPile(positionOffset: vec3, wastePile: WastePile): StockPile {
-    const materialFront = MaterialCache.getInstance().getPileMaterial(
-        "∅",
-        PILE_BACKGROUND_COLOR,
-        PILE_SYMBOL_COLOR,
-        CARD_WIDTH,
-        CARD_HEIGHT
-    );
-    const materialBack = MaterialCache.getInstance().getPileMaterial(
-        "∅",
-        PILE_BACKGROUND_COLOR,
-        PILE_SYMBOL_COLOR,
-        CARD_WIDTH,
-        CARD_HEIGHT
-    );
-    const planeGeometry = new THREE.PlaneGeometry(CARD_WIDTH, CARD_HEIGHT);
+function createStockPile(width: number, height: number, positionOffset: vec3, wastePile: WastePile): StockPile {
+    const materialFront = createStockPileMaterial(width, height);
+    const materialBack = materialFront;
+    const planeGeometry = new THREE.PlaneGeometry(width, height);
     return new StockPile(
         1,
         planeGeometry,
@@ -97,16 +99,10 @@ export function createStockPile(positionOffset: vec3, wastePile: WastePile): Sto
     );
 }
 
-export function createWastePile(positionOffset: vec3): WastePile {
-    const materialFront = MaterialCache.getInstance().getPileMaterial(
-        "",
-        PILE_BACKGROUND_COLOR,
-        PILE_SYMBOL_COLOR,
-        CARD_WIDTH,
-        CARD_HEIGHT
-    );
-    const materialBack = MaterialCache.getInstance().getPileMaterial("", PILE_BACKGROUND_COLOR, PILE_SYMBOL_COLOR, CARD_WIDTH, CARD_HEIGHT);
-    const planeGeometry = new THREE.PlaneGeometry(CARD_WIDTH, CARD_HEIGHT);
+function createWastePile(width: number, height: number, positionOffset: vec3): WastePile {
+    const materialFront = createWastePileMaterial(width, height);
+    const materialBack = materialFront;
+    const planeGeometry = new THREE.PlaneGeometry(width, height);
     return new WastePile(
         2,
         planeGeometry,
@@ -118,22 +114,10 @@ export function createWastePile(positionOffset: vec3): WastePile {
     );
 }
 
-export function createTableauPiles(positionOffset: vec3, spacing: number): TableauPile[] {
-    const materialFront = MaterialCache.getInstance().getPileMaterial(
-        "K",
-        PILE_BACKGROUND_COLOR,
-        PILE_SYMBOL_COLOR,
-        CARD_WIDTH,
-        CARD_HEIGHT
-    );
-    const materialBack = MaterialCache.getInstance().getPileMaterial(
-        "K",
-        PILE_BACKGROUND_COLOR,
-        PILE_SYMBOL_COLOR,
-        CARD_WIDTH,
-        CARD_HEIGHT
-    );
-    const planeGeometry = new THREE.PlaneGeometry(CARD_WIDTH, CARD_HEIGHT);
+function createTableauPiles(width: number, height: number, positionOffset: vec3, spacing: number): TableauPile[] {
+    const materialFront = createTableauPileMaterial(width, height);
+    const materialBack = materialFront;
+    const planeGeometry = new THREE.PlaneGeometry(width, height);
     function create(index: number, position: vec3): TableauPile {
         return new TableauPile(
             index,
@@ -157,22 +141,10 @@ export function createTableauPiles(positionOffset: vec3, spacing: number): Table
     ];
 }
 
-export function createFoundationPiles(positionOffset: vec3, spacing: number): FoundationPile[] {
-    const materialFront = MaterialCache.getInstance().getPileMaterial(
-        "A",
-        PILE_BACKGROUND_COLOR,
-        PILE_SYMBOL_COLOR,
-        CARD_WIDTH,
-        CARD_HEIGHT
-    );
-    const materialBack = MaterialCache.getInstance().getPileMaterial(
-        "A",
-        PILE_BACKGROUND_COLOR,
-        PILE_SYMBOL_COLOR,
-        CARD_WIDTH,
-        CARD_HEIGHT
-    );
-    const planeGeometry = new THREE.PlaneGeometry(CARD_WIDTH, CARD_HEIGHT);
+function createFoundationPiles(width: number, height: number, positionOffset: vec3, spacing: number): FoundationPile[] {
+    const materialFront = createFoundationPileMaterial(width, height);
+    const materialBack = materialFront;
+    const planeGeometry = new THREE.PlaneGeometry(width, height);
     function create(index: number, position: vec3): FoundationPile {
         return new FoundationPile(
             index,
@@ -191,18 +163,4 @@ export function createFoundationPiles(positionOffset: vec3, spacing: number): Fo
         create(12, vec3(positionOffset.x + (CARD_WIDTH * 5) / 2 + spacing * 2, positionOffset.y - CARD_HEIGHT / 2, positionOffset.z)),
         create(13, vec3(positionOffset.x + (CARD_WIDTH * 7) / 2 + spacing * 3, positionOffset.y - CARD_HEIGHT / 2, positionOffset.z)),
     ];
-}
-
-export function createDeck(): Deck {
-    return new Deck(CARD_WIDTH, CARD_HEIGHT);
-}
-
-export function dealCards(deck: Deck, stockPile: StockPile, tableauPiles: TableauPile[]): void {
-    for (let i = 0; i < 7; i++) {
-        for (let j = 0; j < i + 1; j++) {
-            tableauPiles[i].addCard(deck.popOrThrow());
-        }
-    }
-    stockPile.addCardsReversed(deck.popAllCards());
-    tableauPiles.forEach((pile) => pile.getTopCardOrThrow().makeFaceUp());
 }

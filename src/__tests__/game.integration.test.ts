@@ -75,9 +75,6 @@ describe("Board", () => {
         undoButton = TestSetup.test_createUndoButton();
         board = TestSetup.test_createBoard();
         game = new Game(board, new Controls(undoButton));
-        TestSetup.test_setupBoard(board);
-        const deck = TestSetup.test_createDeck();
-        TestSetup.test_dealCards(deck, board.stockPile, board.tableauPiles);
     });
 
     beforeEach(() => {

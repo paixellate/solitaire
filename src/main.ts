@@ -2,7 +2,8 @@ import * as THREE from "three";
 import { Game } from "./core/game";
 import { Input } from "./input";
 import Stats from "stats.js";
-import { createBoard, createControls, createDeck, dealCards, setupBoard } from "./core/setup";
+import { createBoard } from "./core/setup";
+import { createControls } from "./core/setup";
 
 const stats = new Stats();
 // the number will decide which information will be displayed
@@ -24,8 +25,7 @@ const camera = new THREE.OrthographicCamera(
     0.1,
     1000
 );
-
-
+camera.position.z = 500;
 
 
 
@@ -72,14 +72,7 @@ const scene = new THREE.Scene();
 const ambientLight = new THREE.AmbientLight(0xffffff, 2.5);
 scene.add(ambientLight);
 
-camera.position.z = 500;
-
-const board = createBoard();
-setupBoard(board);
-const deck = createDeck();
-dealCards(deck, board.stockPile, board.tableauPiles);
-
-const game = new Game(board, createControls());
+const game = new Game(createBoard(), createControls());
 game.addToScene(scene);
 
 function animate() {
