@@ -13,38 +13,39 @@ import { Controls } from "./ui/controls";
 import { Button } from "./ui/button";
 import { createBoardMaterial, createStockPileMaterial, createWastePileMaterial, createTableauPileMaterial, createFoundationPileMaterial, createSelectionPileMaterial } from "../material/materials";
 
-const STACK_OFFSET_FACE_UP = vec2(0, -0.2);
-const STACK_OFFSET_FACE_DOWN = vec2(0, -0.04);
-const STACK_OFFSET_HIDDEN = vec2(0.001, -0.001);
+const STACK_OFFSET_FACE_UP = vec2(0, -27);
+const STACK_OFFSET_FACE_DOWN = vec2(0, -2);
+const STACK_OFFSET_HIDDEN = vec2(0.1, -0.2);
 
-const CARD_WIDTH = 100;
-const CARD_HEIGHT = 140;
+const CARD_WIDTH = 80;
+const CARD_HEIGHT = CARD_WIDTH * 1.4;
 
-const BOARD_WIDTH = 1200;
+const PILE_MARGIN = 10;
+const PILE_SPACING = PILE_MARGIN + CARD_WIDTH;
+
+const BOARD_WIDTH = 800;
 const BOARD_HEIGHT = 800;
 const BOARD_POSITION = vec3(0, 0, -100);
 
-const WASTE_PILE_POSITION = vec3(250, 350, 0);
-const STOCK_PILE_POSITION = vec3(400, 350, 0);
-const TABLEAU_PILES_POSITION = vec3(-500, 150, 0);
-const FOUNDATION_PILES_POSITION = vec3(-500, 350, 0);
+const WASTE_PILE_POSITION = vec3(2 * PILE_SPACING, 250, 0);
+const STOCK_PILE_POSITION = vec3(3 * PILE_SPACING, 250, 0);
+const TABLEAU_PILES_POSITION = vec3(0, 110, 0);
+const FOUNDATION_PILES_POSITION = vec3(-1.5 * PILE_SPACING, 250, 0);
 const SELECTION_PILE_POSITION = vec3(0, 0, 0);
 
 export function createControls(): Controls {
     return new Controls(new Button("↶", 50, 50, vec3(-600, 0, 0)));
 }
 
-
 export function createBoard(): Board {
-
     const planeGeometry = new THREE.PlaneGeometry(BOARD_WIDTH, BOARD_HEIGHT);
     const history = new History();
     const material = createBoardMaterial();
 
     const wastePile = createWastePile(CARD_WIDTH, CARD_HEIGHT, WASTE_PILE_POSITION);
     const stockPile = createStockPile(CARD_WIDTH, CARD_HEIGHT, STOCK_PILE_POSITION, wastePile);
-    const tableauPiles = createTableauPiles(CARD_WIDTH, CARD_HEIGHT, TABLEAU_PILES_POSITION, 50);
-    const foundationPiles = createFoundationPiles(CARD_WIDTH, CARD_HEIGHT, FOUNDATION_PILES_POSITION, 50);
+    const tableauPiles = createTableauPiles(CARD_WIDTH, CARD_HEIGHT, TABLEAU_PILES_POSITION, PILE_SPACING);
+    const foundationPiles = createFoundationPiles(CARD_WIDTH, CARD_HEIGHT, FOUNDATION_PILES_POSITION, PILE_SPACING);
     const selectionPile = createSelectionPile(CARD_WIDTH, CARD_HEIGHT, SELECTION_PILE_POSITION);
     const board = new Board(
         planeGeometry,
@@ -90,7 +91,7 @@ function createStockPile(width: number, height: number, positionOffset: vec3, wa
     return new StockPile(
         1,
         planeGeometry,
-        vec3(positionOffset.x + CARD_WIDTH / 2, positionOffset.y - CARD_HEIGHT / 2, positionOffset.z),
+        positionOffset,
         STACK_OFFSET_FACE_UP,
         STACK_OFFSET_HIDDEN,
         materialFront,
@@ -106,7 +107,7 @@ function createWastePile(width: number, height: number, positionOffset: vec3): W
     return new WastePile(
         2,
         planeGeometry,
-        vec3(positionOffset.x + CARD_WIDTH / 2, positionOffset.y - CARD_HEIGHT / 2, positionOffset.z),
+        positionOffset,
         STACK_OFFSET_HIDDEN,
         STACK_OFFSET_HIDDEN,
         materialFront,
@@ -131,13 +132,13 @@ function createTableauPiles(width: number, height: number, positionOffset: vec3,
     }
 
     return [
-        create(3, vec3(positionOffset.x + (CARD_WIDTH * 1) / 2 + spacing * 0, positionOffset.y - CARD_HEIGHT / 2, positionOffset.z)),
-        create(4, vec3(positionOffset.x + (CARD_WIDTH * 3) / 2 + spacing * 1, positionOffset.y - CARD_HEIGHT / 2, positionOffset.z)),
-        create(5, vec3(positionOffset.x + (CARD_WIDTH * 5) / 2 + spacing * 2, positionOffset.y - CARD_HEIGHT / 2, positionOffset.z)),
-        create(6, vec3(positionOffset.x + (CARD_WIDTH * 7) / 2 + spacing * 3, positionOffset.y - CARD_HEIGHT / 2, positionOffset.z)),
-        create(7, vec3(positionOffset.x + (CARD_WIDTH * 9) / 2 + spacing * 4, positionOffset.y - CARD_HEIGHT / 2, positionOffset.z)),
-        create(8, vec3(positionOffset.x + (CARD_WIDTH * 11) / 2 + spacing * 5, positionOffset.y - CARD_HEIGHT / 2, positionOffset.z)),
-        create(9, vec3(positionOffset.x + (CARD_WIDTH * 13) / 2 + spacing * 6, positionOffset.y - CARD_HEIGHT / 2, positionOffset.z)),
+        create(3, vec3(positionOffset.x - spacing * 3, positionOffset.y, positionOffset.z)),
+        create(4, vec3(positionOffset.x - spacing * 2, positionOffset.y, positionOffset.z)),
+        create(5, vec3(positionOffset.x - spacing * 1, positionOffset.y, positionOffset.z)),
+        create(6, vec3(positionOffset.x, positionOffset.y, positionOffset.z)),
+        create(7, vec3(positionOffset.x + spacing * 1, positionOffset.y, positionOffset.z)),
+        create(8, vec3(positionOffset.x + spacing * 2, positionOffset.y, positionOffset.z)),
+        create(9, vec3(positionOffset.x + spacing * 3, positionOffset.y, positionOffset.z)),
     ];
 }
 
@@ -158,9 +159,9 @@ function createFoundationPiles(width: number, height: number, positionOffset: ve
     }
 
     return [
-        create(10, vec3(positionOffset.x + (CARD_WIDTH * 1) / 2 + spacing * 0, positionOffset.y - CARD_HEIGHT / 2, positionOffset.z)),
-        create(11, vec3(positionOffset.x + (CARD_WIDTH * 3) / 2 + spacing * 1, positionOffset.y - CARD_HEIGHT / 2, positionOffset.z)),
-        create(12, vec3(positionOffset.x + (CARD_WIDTH * 5) / 2 + spacing * 2, positionOffset.y - CARD_HEIGHT / 2, positionOffset.z)),
-        create(13, vec3(positionOffset.x + (CARD_WIDTH * 7) / 2 + spacing * 3, positionOffset.y - CARD_HEIGHT / 2, positionOffset.z)),
+        create(10, vec3(positionOffset.x - spacing * 1.5, positionOffset.y, positionOffset.z)),
+        create(11, vec3(positionOffset.x - spacing * 0.5, positionOffset.y, positionOffset.z)),
+        create(12, vec3(positionOffset.x + spacing * 0.5, positionOffset.y, positionOffset.z)),
+        create(13, vec3(positionOffset.x + spacing * 1.5, positionOffset.y, positionOffset.z)),
     ];
 }

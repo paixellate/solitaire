@@ -37,14 +37,6 @@ export class Rectangle extends GameObject {
         return box.containsPoint(vec3(mousePosition.x - position.x, mousePosition.y - position.y, 0));
     }
 
-    public getWidth(): number {
-        return this.planeGeometry.parameters.width;
-    }
-
-    public getHeight(): number {
-        return this.planeGeometry.parameters.height;
-    }
-
     public setFrontMaterials(material: THREE.Material): void {
         this.meshFront.material = material;
     }

@@ -73,11 +73,11 @@ export abstract class Pile extends Rectangle {
         const topCard = this.getTopCard();
         if (topCard) {
             if (topCard.isFaceUp) {
-                const position = vec3(this.getWidth() * faceUpOffset.x, this.getHeight() * faceUpOffset.y, 1);
+                const position = vec3(faceUpOffset.x, faceUpOffset.y, 1);
                 card.setLocalPosition(position);
                 card.addToObject(topCard);
             } else {
-                const position = vec3(this.getWidth() * faceDownOffset.x, this.getHeight() * faceDownOffset.y, 1);
+                const position = vec3(faceDownOffset.x, faceDownOffset.y, 1);
                 card.setLocalPosition(position);
                 card.addToObject(topCard);
             }
