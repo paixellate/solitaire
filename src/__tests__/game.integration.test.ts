@@ -4,13 +4,14 @@ import { Input } from "../input";
 import { Selections } from "../core/rules/selection";
 import { vec2, vec3 } from "../vector";
 import { Board } from "../core/board";
-import { TestSetup } from "./testSetup";
 import { getRankValue, Rank } from "../core/cards/rank";
 import { Controls } from "../core/ui/controls";
 import { isOppositeColor, Suit } from "../core/cards/suit";
 import { TableauPile } from "../core/piles/concrete/tableauPile";
 import { Game } from "../core/game";
 import { Button } from "../core/ui/button";
+import { createBoard } from "../core/setup";
+import { TEST_LAYOUT } from "./testLayout";
 
 // Create minimal mocks for THREE.js objects we need to control
 vi.mock("three", async () => {
@@ -72,9 +73,10 @@ describe("Board", () => {
 
     beforeAll(() => {
         input = new Input();
-        undoButton = TestSetup.test_createUndoButton();
-        board = TestSetup.test_createBoard();
-        game = new Game(board, new Controls(undoButton));
+        undoButton = new Button("↶", 50, 50, vec3(-600, 0, 0));
+        const controls = new Controls(undoButton);
+        board = createBoard(TEST_LAYOUT);
+        game = new Game(board, controls);
     });
 
     beforeEach(() => {
@@ -141,7 +143,7 @@ describe("Board", () => {
     });
 
     it("should create a selection when mouse down on a pile", () => {
-        const stockPilePosition = vec2(450, 350);
+        const stockPilePosition = TEST_LAYOUT.stockPilePosition;
 
         const spySelections_create = vi.spyOn(Selections, "create");
         const spySelectionPile_set = vi.spyOn(board.selectionPile, "set");
@@ -162,9 +164,9 @@ describe("Board", () => {
         // Verify selection was set
         expect(actualSelection).not.toBeNull();
         expect(actualSelection).toBe(board.selection);
-        expect(actualSelection?.mousePosition).toEqual(vec2(450, 350));
-        expect(actualSelection?.cardPosition?.x).toBeCloseTo(452.3);
-        expect(actualSelection?.cardPosition?.y).toBeCloseTo(276.78);
+        expect(actualSelection?.mousePosition).toEqual(vec2(270, 250));
+        expect(actualSelection?.cardPosition?.x).toBeCloseTo(272.3);
+        expect(actualSelection?.cardPosition?.y).toBeCloseTo(245.4);
         expect(actualSelection?.cardPosition?.z).toBeCloseTo(-76);
         expect(actualSelection?.source).toBe(board.stockPile);
         expect(actualSelection?.cards.length).toEqual(1);
@@ -197,7 +199,7 @@ describe("Board", () => {
     });
 
     it("should create and execute a move when mouse up after selection", () => {
-        const stockPilePosition = vec2(450, 350);
+        const stockPilePosition = TEST_LAYOUT.stockPilePosition;
 
         // Simulate mouse down on a pile
         input.mouse.position.set(stockPilePosition.x, stockPilePosition.y);
@@ -228,7 +230,7 @@ describe("Board", () => {
     });
 
     it("should select and drag a card to a tableau pile", () => {
-        const wastePilePosition = board.wastePile.getGlobalPosition();
+        const wastePilePosition = TEST_LAYOUT.wastePilePosition;
         const tableauPile4Position = board.tableauPiles[4].getGlobalPosition();
 
         // Simulate mouse down on a pile

@@ -2,7 +2,6 @@ import * as THREE from "three";
 import { Input } from "../input";
 import { Board } from "./board";
 import { Controls } from "./ui/controls";
-import { setupBoard } from "./setup";
 
 export class Game {
     private readonly board: Board;
@@ -11,7 +10,6 @@ export class Game {
     constructor(board: Board, controls: Controls) {
         this.board = board;
         this.controls = controls;
-        setupBoard(this.board);
     }
 
     public addToScene(scene: THREE.Scene): void {
