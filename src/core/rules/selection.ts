@@ -47,24 +47,4 @@ export class Selections {
     public isSourceTableauPile(): boolean {
         return this.source instanceof TableauPile;
     }
-
-    public static create(mousePosition: vec2, board: Board): Selections | null {
-        for (const sourcePile of [board.wastePile, ...board.foundationPiles]) {
-            if (sourcePile.getIsMouseOver(mousePosition)) {
-                return sourcePile.popSelectedCards(mousePosition);
-            }
-        }
-
-        for (const tableauPile of board.tableauPiles) {
-            if (tableauPile.getIsMouseOver(mousePosition)) {
-                return tableauPile.popSelectedCards(mousePosition);
-            }
-        }
-
-        if (board.stockPile.getIsMouseOver(mousePosition)) {
-            return board.stockPile.popSelectedCards(mousePosition);
-        }
-
-        return null;
-    }
 }

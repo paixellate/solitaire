@@ -14,15 +14,18 @@ import { Button } from "./ui/button";
 import { createBoardMaterial, createStockPileMaterial, createWastePileMaterial, createTableauPileMaterial, createFoundationPileMaterial, createSelectionPileMaterial } from "../material/materials";
 import { LayoutConfig } from "./layout";
 
-export function createControls(): Controls {
-    return new Controls(new Button("↶", 50, 50, vec3(0, -200, 0)));
+export function createControls(layout: LayoutConfig): Controls {
+    const undoButton = new Button("↶", layout.buttonWidth, layout.buttonHeight, vec3(-layout.buttonWidth - 10, layout.controlsVerticalOffset, 0));
+    const restartButton = new Button("↺", layout.buttonWidth, layout.buttonHeight, vec3(0, layout.controlsVerticalOffset, 0));
+    const newGameButton = new Button("X", layout.buttonWidth, layout.buttonHeight, vec3(layout.buttonWidth + 10, layout.controlsVerticalOffset, 0));
+    return new Controls(undoButton, restartButton, newGameButton);
 }
 
-export function createBoard(layout: LayoutConfig): Board {
+export function createBoard(layout: LayoutConfig, seed: number): Board {
     const planeGeometry = new THREE.PlaneGeometry(layout.boardWidth, layout.boardHeight);
-    const history = new History();
+    const history = new History(seed);
     const material = createBoardMaterial();
-
+    const deck = new Deck(layout.cardWidth, layout.cardHeight);
     const wastePile = createWastePile(layout);
     const stockPile = createStockPile(layout, wastePile);
     const tableauPiles = createTableauPiles(layout);
@@ -31,13 +34,14 @@ export function createBoard(layout: LayoutConfig): Board {
     const board = new Board(
         planeGeometry,
         layout.boardPosition,
-        history,
         material,
+        deck,
         wastePile,
         stockPile,
         tableauPiles,
         foundationPiles,
-        selectionPile
+        selectionPile,
+        history
     );
     wastePile.addToObject(board);
     stockPile.addToObject(board);
@@ -45,20 +49,9 @@ export function createBoard(layout: LayoutConfig): Board {
     foundationPiles.forEach((pile) => pile.addToObject(board));
     selectionPile.addToObject(board);
 
-    setupBoard(board, layout);
     return board;
 }
 
-function setupBoard(board: Board, layout: LayoutConfig): void {
-    const deck = new Deck(layout.cardWidth, layout.cardHeight);
-    for (let i = 0; i < 7; i++) {
-        for (let j = 0; j < i + 1; j++) {
-            board.tableauPiles[i].addCard(deck.popOrThrow());
-        }
-    }
-    board.stockPile.addCardsReversed(deck.popAllCards());
-    board.tableauPiles.forEach((pile) => pile.getTopCardOrThrow().makeFaceUp());
-}
 
 function createSelectionPile(layout: LayoutConfig): SelectionPile {
     const material = createSelectionPileMaterial();

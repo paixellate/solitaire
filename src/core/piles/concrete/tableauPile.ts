@@ -43,6 +43,10 @@ export class TableauPile extends Pile implements InteractivePile {
     }
 
     public popSelectedCards(mousePosition: vec2): Selections | null {
+        if (this.isEmpty()) {
+            return null;
+        }
+
         const card = this.getMouseOverCard(mousePosition);
         if (card) {
             const cardPosition = card.getGlobalPosition();

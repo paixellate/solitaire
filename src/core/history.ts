@@ -1,10 +1,16 @@
 import { Move } from "./rules/move";
 
 export class History {
+    private readonly seed: number;
     private readonly moves: Move[];
 
-    constructor() {
+    constructor(seed: number) {
+        this.seed = seed;
         this.moves = [];
+    }
+
+    public getSeed(): number {
+        return this.seed;
     }
 
     public getNumberOfMoves(): number {
@@ -19,6 +25,12 @@ export class History {
         const move = this.moves.pop();
         if (move) {
             move.undo();
+        }
+    }
+
+    public clear(): void {
+        while (this.moves.length > 0) {
+            this.moves.pop();
         }
     }
 }

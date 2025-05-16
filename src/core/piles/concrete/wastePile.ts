@@ -18,7 +18,7 @@ export class WastePile extends Pile implements InteractivePile {
     }
 
     public popSelectedCards(mousePosition: vec2): Selections | null {
-        if (!this.isEmpty()) {
+        if (!this.isEmpty() && this.getIsMouseOver(mousePosition)) {
             const cardPosition = this.getTopCardGlobalPosition();
             const card = this.popCardOrThrow();
             return new Selections([card], mousePosition, cardPosition, this);

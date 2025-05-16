@@ -71,37 +71,5 @@ export class Move {
         this.selection.source.addCardsReversed(this.selection.cards);
     }
 
-    public static create(selection: Selections, mousePosition: vec2, board: Board): Move {
-        const isAuto = selection.source.getIsMouseOver(mousePosition);
 
-        if (selection.isSingleCard()) {
-            if (selection.isSourceStockPile() && (isAuto || board.wastePile.getIsMouseOver(mousePosition))) {
-                return new Move(selection, board.wastePile);
-            }
-
-            if (!selection.isSourceFoundationPile()) {
-                for (const foundationPile of board.foundationPiles) {
-                    if (foundationPile.canAddCard(selection.cards[0]) && (isAuto || foundationPile.getIsMouseOver(mousePosition))) {
-                        return new Move(selection, foundationPile);
-                    }
-                }
-            }
-        } else {
-            if (selection.isSourceWastePile() && (isAuto || board.stockPile.getIsMouseOver(mousePosition))) {
-                return new Move(selection, board.stockPile);
-            }
-        }
-
-        for (const tableauPile of board.tableauPiles) {
-            if (tableauPile === selection.source) {
-                continue;
-            }
-
-            if (tableauPile.canAddCard(selection.getTopCard()) && (isAuto || tableauPile.getIsMouseOver(mousePosition))) {
-                return new Move(selection, tableauPile);
-            }
-        }
-
-        return new Move(selection, selection.source);
-    }
 }

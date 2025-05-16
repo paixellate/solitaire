@@ -7,6 +7,23 @@ const BOARD_COLOR = "#060";
 const PILE_BACKGROUND_COLOR = "#040";
 const PILE_SYMBOL_COLOR = "#030";
 
+const BUTTON_COLOR = "#333";
+const BUTTON_COLOR_OVER = "#666";
+const BUTTON_COLOR_DOWN = "#111";
+const BUTTON_TEXT_COLOR = "#fff";
+
+export function createButtonMaterial(text: string, width: number, height: number) {
+    return MaterialCache.getInstance().getButtonMaterial(text, BUTTON_COLOR, BUTTON_TEXT_COLOR, width, height);
+}
+
+export function createButtonMaterialOver(text: string, width: number, height: number) {
+    return MaterialCache.getInstance().getButtonMaterial(text, BUTTON_COLOR_OVER, BUTTON_TEXT_COLOR, width, height);
+}
+
+export function createButtonMaterialDown(text: string, width: number, height: number) {
+    return MaterialCache.getInstance().getButtonMaterial(text, BUTTON_COLOR_DOWN, BUTTON_TEXT_COLOR, width, height);
+}
+
 export function createBoardMaterial() {
     return new THREE.MeshBasicMaterial({ color: BOARD_COLOR });
 }

@@ -23,6 +23,10 @@ export class StockPile extends Pile implements InteractivePile {
     }
 
     public popSelectedCards(mousePosition: vec2): Selections | null {
+        if (!this.getIsMouseOver(mousePosition)) {
+            return null;
+        }
+
         if (!this.isEmpty()) {
             const cardPosition = this.getTopCardGlobalPosition();
             const card = this.popCardOrThrow();

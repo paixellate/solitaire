@@ -8,8 +8,15 @@ import { createCardBackMaterial, createCardMaterial } from "../../material/mater
 export class Deck {
     private cards: Card[];
 
-    constructor(width: number, height: number, cards?: Card[]) {
-        this.cards = cards || this.createCards(width, height);
+    constructor(width: number, height: number) {
+        this.cards = this.createCards(width, height);
+    }
+
+    public shuffle(seed: number): Card[] {
+        if (seed == -1) {
+            return [...this.cards];
+        }
+        return this.shuffleCards([...this.cards], seed);
     }
 
     private createCards(width: number, height: number): Card[] {
@@ -26,18 +33,21 @@ export class Deck {
         return cards;
     }
 
-    public popOrThrow(): Card {
-        if (this.cards.length === 0) {
-            throw new Error("Deck is empty");
+    private shuffleCards(array: Card[], seed: number): Card[] {
+        let currentSeed = seed;
+        
+        // Simple deterministic PRNG function
+        const nextSeed = () => {
+            currentSeed = (currentSeed * 9301 + 49297) % 233280;
+            return currentSeed / 233280;
+        };
+        
+        // Fisher-Yates shuffle with seeded randomness
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(nextSeed() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
         }
-        return this.cards.pop()!;
-    }
-
-    public popAllCards(): Card[] {
-        const cards: Card[] = [];
-        while (this.cards.length > 0) {
-            cards.push(this.popOrThrow());
-        }
-        return cards;
+        
+        return array;
     }
 }

@@ -69,15 +69,19 @@ describe("Board", () => {
     let board: Board;
     let game: Game;
     let undoButton: Button;
+    let restartButton: Button;
+    let newGameButton: Button;
     let input: Input;
     let layout: LayoutConfig;
 
     beforeAll(() => {
         input = new Input();
         undoButton = new Button("↶", 50, 50, vec3(-600, 0, 0));
-        const controls = new Controls(undoButton);
+        restartButton = new Button("↺", 50, 50, vec3(-300, 0, 0));
+        newGameButton = new Button("🔄", 50, 50, vec3(0, 0, 0));
+        const controls = new Controls(undoButton, restartButton, newGameButton);
         layout = getDefaultLayout(800, 800);
-        board = createBoard(layout);
+        board = createBoard(layout, -1);
         game = new Game(board, controls);
     });
 
@@ -147,7 +151,7 @@ describe("Board", () => {
     it("should create a selection when mouse down on a pile", () => {
         const stockPilePosition = layout.stockPilePosition;
 
-        const spySelections_create = vi.spyOn(Selections, "create");
+        const spySelections_create = vi.spyOn(board as any, "createSelection");
         const spySelectionPile_set = vi.spyOn(board.selectionPile, "set");
 
         // Simulate mouse down on a pile
@@ -158,7 +162,7 @@ describe("Board", () => {
         game.mainLoop(input);
 
         // Verify selection logic was called with correct parameters
-        expect(spySelections_create).toHaveBeenCalledWith(input.mouse.position, board);
+        expect(spySelections_create).toHaveBeenCalledWith(input.mouse.position);
 
         // Capture the actual selection that was passed to setSelection
         const actualSelection = spySelectionPile_set.mock.calls[0][0];

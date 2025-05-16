@@ -101,8 +101,8 @@ window.addEventListener("touchend", (event) => {
 const scene = new THREE.Scene();
 const ambientLight = new THREE.AmbientLight(0xffffff, 2.5);
 scene.add(ambientLight);
-
-const game = new Game(createBoard(getDefaultLayout(window.innerWidth, window.innerHeight)), createControls());
+const layout = getDefaultLayout(window.innerWidth, window.innerHeight);
+const game = new Game(createBoard(layout, -1), createControls(layout));
 game.addToScene(scene);
 
 function animate() {
