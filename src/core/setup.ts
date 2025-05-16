@@ -12,13 +12,13 @@ import { History } from "./history";
 import { Controls } from "./ui/controls";
 import { Button } from "./ui/button";
 import { createBoardMaterial, createStockPileMaterial, createWastePileMaterial, createTableauPileMaterial, createFoundationPileMaterial, createSelectionPileMaterial } from "../material/materials";
-import DEFAULT_LAYOUT, { LayoutConfig } from "./layout";
+import { LayoutConfig } from "./layout";
 
 export function createControls(): Controls {
     return new Controls(new Button("↶", 50, 50, vec3(0, -200, 0)));
 }
 
-export function createBoard(layout: LayoutConfig = DEFAULT_LAYOUT): Board {
+export function createBoard(layout: LayoutConfig): Board {
     const planeGeometry = new THREE.PlaneGeometry(layout.boardWidth, layout.boardHeight);
     const history = new History();
     const material = createBoardMaterial();
@@ -49,7 +49,7 @@ export function createBoard(layout: LayoutConfig = DEFAULT_LAYOUT): Board {
     return board;
 }
 
-function setupBoard(board: Board, layout: LayoutConfig = DEFAULT_LAYOUT): void {
+function setupBoard(board: Board, layout: LayoutConfig): void {
     const deck = new Deck(layout.cardWidth, layout.cardHeight);
     for (let i = 0; i < 7; i++) {
         for (let j = 0; j < i + 1; j++) {

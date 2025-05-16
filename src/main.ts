@@ -4,6 +4,7 @@ import { Input } from "./input";
 import Stats from "stats.js";
 import { createBoard } from "./core/setup";
 import { createControls } from "./core/setup";
+import { getDefaultLayout } from "./core/layout";
 
 // const stats = new Stats();
 // the number will decide which information will be displayed
@@ -101,7 +102,7 @@ const scene = new THREE.Scene();
 const ambientLight = new THREE.AmbientLight(0xffffff, 2.5);
 scene.add(ambientLight);
 
-const game = new Game(createBoard(), createControls());
+const game = new Game(createBoard(getDefaultLayout(window.innerWidth, window.innerHeight)), createControls());
 game.addToScene(scene);
 
 function animate() {

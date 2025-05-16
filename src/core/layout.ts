@@ -21,11 +21,12 @@ export interface LayoutConfig {
   selectionPilePosition: vec3;
 }
 
-const DEFAULT_LAYOUT: LayoutConfig = {
+export function getDefaultLayout(windowWidth: number, windowHeight: number): LayoutConfig {
+  const layout = {
   
   // Card dimensions
   // max 100 and min depends on screen size
-  get cardWidth() { return Math.min(window.innerWidth / 8.5, 100); },
+  get cardWidth() { return Math.min(windowWidth / 8.5, 100); },
   get cardHeight() { return this.cardWidth * 1.4; },
 
   // Card offsets
@@ -46,7 +47,7 @@ const DEFAULT_LAYOUT: LayoutConfig = {
   
   // Board dimensions
   get boardWidth() { return this.pileSpacing * 7.5},
-  get boardHeight() { return window.innerHeight },
+  get boardHeight() { return windowHeight },
   boardPosition: vec3(0, 0, -1),
 
   get offsetYTop() { return this.boardHeight/2  - this.pileSpacingVertical * 0.6 },
@@ -60,4 +61,6 @@ const DEFAULT_LAYOUT: LayoutConfig = {
   selectionPilePosition: vec3(0, 0, 0)
 };
 
-export default DEFAULT_LAYOUT;
+  return layout;
+}
+
