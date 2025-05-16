@@ -15,7 +15,7 @@ import { createBoardMaterial, createStockPileMaterial, createWastePileMaterial, 
 import DEFAULT_LAYOUT, { LayoutConfig } from "./layout";
 
 export function createControls(): Controls {
-    return new Controls(new Button("↶", 50, 50, vec3(-600, 0, 0)));
+    return new Controls(new Button("↶", 50, 50, vec3(0, -200, 0)));
 }
 
 export function createBoard(layout: LayoutConfig = DEFAULT_LAYOUT): Board {
@@ -61,7 +61,7 @@ function setupBoard(board: Board, layout: LayoutConfig = DEFAULT_LAYOUT): void {
 }
 
 function createSelectionPile(layout: LayoutConfig): SelectionPile {
-    const material = createSelectionPileMaterial(layout.cardWidth, layout.cardHeight);
+    const material = createSelectionPileMaterial();
     const planeGeometry = new THREE.PlaneGeometry(layout.cardWidth, layout.cardHeight);
     return new SelectionPile(
         0, 

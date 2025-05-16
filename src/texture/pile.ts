@@ -16,7 +16,11 @@ export function createPileTexture(symbol: string, backgroundColor: string, symbo
     ctx.strokeRect(borderWidth, borderWidth, width - borderWidth * 2, height - borderWidth * 2);
 
     // Draw big symbol in center
-    ctx.font = `bold 72px Arial`;
+    if (width < 60) {
+        ctx.font = `48px Arial`;
+    } else {
+        ctx.font = `bold 72px Arial`;
+    }
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = symbolColor;

@@ -5,15 +5,15 @@ import Stats from "stats.js";
 import { createBoard } from "./core/setup";
 import { createControls } from "./core/setup";
 
-const stats = new Stats();
+// const stats = new Stats();
 // the number will decide which information will be displayed
 // 0 => FPS Frames rendered in the last second. The higher the number the better.
 // 1 => MS Milliseconds needed to render a frame. The lower the number the better.
 // 2 => MB MBytes of allocated memory. (Run Chrome with --enable-precise-memory-info)
 // 3 => CUSTOM User-defined panel support.
-stats.showPanel(0);
+// stats.showPanel(0);
 
-document.body.appendChild(stats.dom);
+// document.body.appendChild(stats.dom);
 
 const renderer = new THREE.WebGLRenderer();
 document.body.appendChild(renderer.domElement);
@@ -48,16 +48,22 @@ function onWindowResize() {
 // Add event listener
 window.addEventListener("resize", onWindowResize, false);
 
-// Setup mouse event listeners
+// Setup mouse and touch event listeners
 const input = new Input();
 
-// event.clientX: Screen position from (0 to window.innerWidth) (left to right)
-// event.clientY: Screen position from (0 to window.innerHeight) (top to bottom)
+// Helper function to convert touch/mouse coordinates to scene coordinates
+function convertToSceneCoordinates(clientX: number, clientY: number) {
+    return {
+        x: clientX - window.innerWidth / 2,
+        y: -(clientY - window.innerHeight / 2)
+    };
+}
+
+// Mouse Events
 window.addEventListener("mousemove", (event) => {
-    // set values x: (- window.innerWidth/2 to + window.innerWidth / 2) (left to right)
-    // set values y: (- window.innerHeight/2 to + window.innerHeight / 2) (bottom to top)
-    input.mouse.position.x = event.clientX - window.innerWidth / 2;
-    input.mouse.position.y = -(event.clientY - window.innerHeight / 2);
+    const coords = convertToSceneCoordinates(event.clientX, event.clientY);
+    input.mouse.position.x = coords.x;
+    input.mouse.position.y = coords.y;
 });
 
 window.addEventListener("mousedown", () => {
@@ -67,6 +73,29 @@ window.addEventListener("mousedown", () => {
 window.addEventListener("mouseup", () => {
     input.mouse.isDown = false;
 });
+
+// Touch Events
+window.addEventListener("touchmove", (event) => {
+    event.preventDefault(); // Prevent scrolling
+    const touch = event.touches[0];
+    const coords = convertToSceneCoordinates(touch.clientX, touch.clientY);
+    input.mouse.position.x = coords.x;
+    input.mouse.position.y = coords.y;
+}, { passive: false });
+
+window.addEventListener("touchstart", (event) => {
+    event.preventDefault();
+    input.mouse.isDown = true;
+    const touch = event.touches[0];
+    const coords = convertToSceneCoordinates(touch.clientX, touch.clientY);
+    input.mouse.position.x = coords.x;
+    input.mouse.position.y = coords.y;
+}, { passive: false });
+
+window.addEventListener("touchend", (event) => {
+    event.preventDefault();
+    input.mouse.isDown = false;
+}, { passive: false });
 
 const scene = new THREE.Scene();
 const ambientLight = new THREE.AmbientLight(0xffffff, 2.5);
@@ -78,11 +107,11 @@ game.addToScene(scene);
 function animate() {
     requestAnimationFrame(animate);
 
-    stats.begin();
+    // stats.begin();
     game.mainLoop(input);
 
     renderer.render(scene, camera);
-    stats.end();
+    // stats.end();
 }
 
 onWindowResize();

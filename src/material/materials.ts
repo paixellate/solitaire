@@ -1,5 +1,7 @@
 import * as THREE from "three";
 import { MaterialCache } from "../texture/materialCache";
+import { Rank } from "../core/cards/rank";
+import { Suit } from "../core/cards/suit";
 
 const BOARD_COLOR = "#060";
 const PILE_BACKGROUND_COLOR = "#040";
@@ -9,7 +11,15 @@ export function createBoardMaterial() {
     return new THREE.MeshBasicMaterial({ color: BOARD_COLOR });
 }
 
-export function createSelectionPileMaterial(width: number, height: number) {
+export function createCardMaterial(rank: Rank, suit: Suit, width: number, height: number) {
+    return MaterialCache.getInstance().getCardMaterial(rank, suit, width, height)
+}
+
+export function createCardBackMaterial(width: number, height: number) {
+    return MaterialCache.getInstance().getCardBackMaterial(width, height)
+}
+
+export function createSelectionPileMaterial() {
     const material = new THREE.MeshBasicMaterial({ color: BOARD_COLOR });
     material.transparent = true;
     material.opacity = 0.0;

@@ -8,6 +8,7 @@ export interface LayoutConfig {
   cardHeight: number;
   pileMargin: number;
   pileSpacing: number;
+  pileSpacingVertical: number;
   boardWidth: number;
   boardHeight: number;
   boardPosition: vec3;
@@ -21,26 +22,35 @@ export interface LayoutConfig {
 }
 
 const DEFAULT_LAYOUT: LayoutConfig = {
+  
+  // Card dimensions
+  // max 100 and min depends on screen size
+  get cardWidth() { return Math.min(window.innerWidth / 8.5, 100); },
+  get cardHeight() { return this.cardWidth * 1.4; },
+
   // Card offsets
-  stackOffsetFaceUp: vec2(0, -27),
+  get stackOffsetFaceUp() { 
+    if (this.cardWidth < 70) {
+      return vec2(0, - this.cardHeight * 0.25) 
+    } else {
+      return vec2(0, - this.cardHeight * 0.2) 
+    }
+  },
   stackOffsetFaceDown: vec2(0, -2),
   stackOffsetHidden: vec2(0.1, -0.2),
   
-  // Card dimensions
-  cardWidth: 80,
-  get cardHeight() { return this.cardWidth * 1.4; },
-  
   // Pile layout
-  pileMargin: 10,
+  get pileMargin() { return this.cardWidth * 0.15; },
   get pileSpacing() { return this.pileMargin + this.cardWidth; },
+  get pileSpacingVertical() { return 2 * this.pileMargin + this.cardHeight; },
   
   // Board dimensions
-  boardWidth: 800,
-  boardHeight: 800,
-  boardPosition: vec3(0, 0, -100),
+  get boardWidth() { return this.pileSpacing * 7.5},
+  get boardHeight() { return window.innerHeight },
+  boardPosition: vec3(0, 0, -1),
 
-  offsetYTop: 250,
-  offsetYBottom: 110,
+  get offsetYTop() { return this.boardHeight/2  - this.pileSpacingVertical * 0.6 },
+  get offsetYBottom() { return (this.offsetYTop) - this.pileSpacingVertical; },
   
   // Pile positions
   get foundationPilesPosition() { return vec3(-1.5 * this.pileSpacing, this.offsetYTop, 0); },
