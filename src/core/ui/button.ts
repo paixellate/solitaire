@@ -3,6 +3,7 @@ import { Rectangle } from "../../graphics/mesh/reactangle";
 import { vec3 } from "../../graphics/vector";
 import { Input } from "../../input";
 import { createButtonMaterial, createButtonMaterialOver, createButtonMaterialDown } from "../../graphics/material/materials";
+
 export class Button extends Rectangle {
     private material: THREE.Material;
     private materialOver: THREE.Material;

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import * as THREE from "three";
 import { Input } from "../input";
-import { vec3 } from "../graphics/vector";    
+import { vec3 } from "../graphics/vector";
 import { Board } from "../core/board";
 import { getRankValue, Rank } from "../core/cards/rank";
 import { Controls } from "../core/controls";
@@ -172,7 +172,7 @@ describe("Board", () => {
         expect(actualSelection?.sourceMousePosition?.x).toBeCloseTo(324.705);
         expect(actualSelection?.sourceMousePosition?.y).toBeCloseTo(304);
         expect(actualSelection?.selectedCardPosition?.x).toBeCloseTo(327.005);
-        expect(actualSelection?.selectedCardPosition?.y).toBeCloseTo(299.40);
+        expect(actualSelection?.selectedCardPosition?.y).toBeCloseTo(299.4);
         expect(actualSelection?.selectedCardPosition?.z).toBeCloseTo(23);
         expect(actualSelection?.sourcePile).toBe(board.stockPile);
         expect(actualSelection?.cards.length).toEqual(1);
@@ -1151,5 +1151,4 @@ describe("Board", () => {
         expect(board.selection).toBeNull();
         expect(board.history.getNumberOfMoves()).toBe(0);
     });
-
 });

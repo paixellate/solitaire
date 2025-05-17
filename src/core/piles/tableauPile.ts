@@ -39,5 +39,4 @@ export class TableauPile extends Pile {
         }
         return null;
     }
-
 }

@@ -28,8 +28,6 @@ const camera = new THREE.OrthographicCamera(
 );
 camera.position.z = 500;
 
-
-
 // Function to handle window resize
 function onWindowResize() {
     const width = window.innerWidth;
@@ -56,7 +54,7 @@ const input = new Input();
 function convertToSceneCoordinates(clientX: number, clientY: number) {
     return {
         x: clientX - window.innerWidth / 2,
-        y: -(clientY - window.innerHeight / 2)
+        y: -(clientY - window.innerHeight / 2),
     };
 }
 
@@ -76,27 +74,39 @@ window.addEventListener("mouseup", () => {
 });
 
 // Touch Events
-window.addEventListener("touchmove", (event) => {
-    event.preventDefault(); // Prevent scrolling
-    const touch = event.touches[0];
-    const coords = convertToSceneCoordinates(touch.clientX, touch.clientY);
-    input.mouse.position.x = coords.x;
-    input.mouse.position.y = coords.y;
-}, { passive: false });
+window.addEventListener(
+    "touchmove",
+    (event) => {
+        event.preventDefault(); // Prevent scrolling
+        const touch = event.touches[0];
+        const coords = convertToSceneCoordinates(touch.clientX, touch.clientY);
+        input.mouse.position.x = coords.x;
+        input.mouse.position.y = coords.y;
+    },
+    { passive: false }
+);
 
-window.addEventListener("touchstart", (event) => {
-    event.preventDefault();
-    input.mouse.isDown = true;
-    const touch = event.touches[0];
-    const coords = convertToSceneCoordinates(touch.clientX, touch.clientY);
-    input.mouse.position.x = coords.x;
-    input.mouse.position.y = coords.y;
-}, { passive: false });
+window.addEventListener(
+    "touchstart",
+    (event) => {
+        event.preventDefault();
+        input.mouse.isDown = true;
+        const touch = event.touches[0];
+        const coords = convertToSceneCoordinates(touch.clientX, touch.clientY);
+        input.mouse.position.x = coords.x;
+        input.mouse.position.y = coords.y;
+    },
+    { passive: false }
+);
 
-window.addEventListener("touchend", (event) => {
-    event.preventDefault();
-    input.mouse.isDown = false;
-}, { passive: false });
+window.addEventListener(
+    "touchend",
+    (event) => {
+        event.preventDefault();
+        input.mouse.isDown = false;
+    },
+    { passive: false }
+);
 
 const scene = new THREE.Scene();
 const ambientLight = new THREE.AmbientLight(0xffffff, 2.5);

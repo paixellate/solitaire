@@ -29,11 +29,11 @@ export function createBoardMaterial() {
 }
 
 export function createCardMaterial(rank: Rank, suit: Suit, width: number, height: number) {
-    return MaterialCache.getInstance().getCardMaterial(rank, suit, width, height)
+    return MaterialCache.getInstance().getCardMaterial(rank, suit, width, height);
 }
 
 export function createCardBackMaterial(width: number, height: number) {
-    return MaterialCache.getInstance().getCardBackMaterial(width, height)
+    return MaterialCache.getInstance().getCardBackMaterial(width, height);
 }
 
 export function createSelectionPileMaterial() {
@@ -44,41 +44,17 @@ export function createSelectionPileMaterial() {
 }
 
 export function createStockPileMaterial(width: number, height: number) {
-    return MaterialCache.getInstance().getPileMaterial(
-        "∅",
-        PILE_BACKGROUND_COLOR,
-        PILE_SYMBOL_COLOR,
-        width,
-        height
-    );
+    return MaterialCache.getInstance().getPileMaterial("∅", PILE_BACKGROUND_COLOR, PILE_SYMBOL_COLOR, width, height);
 }
 
 export function createWastePileMaterial(width: number, height: number) {
-    return MaterialCache.getInstance().getPileMaterial(
-        "",
-        PILE_BACKGROUND_COLOR,
-        PILE_SYMBOL_COLOR,
-        width,
-        height
-    );
+    return MaterialCache.getInstance().getPileMaterial("", PILE_BACKGROUND_COLOR, PILE_SYMBOL_COLOR, width, height);
 }
 
 export function createTableauPileMaterial(width: number, height: number) {
-    return MaterialCache.getInstance().getPileMaterial(
-        "K",
-        PILE_BACKGROUND_COLOR,
-        PILE_SYMBOL_COLOR,
-        width,
-        height
-    );
+    return MaterialCache.getInstance().getPileMaterial("K", PILE_BACKGROUND_COLOR, PILE_SYMBOL_COLOR, width, height);
 }
 
 export function createFoundationPileMaterial(width: number, height: number) {
-    return MaterialCache.getInstance().getPileMaterial(
-        "A",
-        PILE_BACKGROUND_COLOR,
-        PILE_SYMBOL_COLOR,
-        width,
-        height
-    );
+    return MaterialCache.getInstance().getPileMaterial("A", PILE_BACKGROUND_COLOR, PILE_SYMBOL_COLOR, width, height);
 }

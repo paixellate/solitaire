@@ -5,7 +5,7 @@ import * as THREE from "three";
 
 /**
  * A special pile class that is used to hold and display the selected cards.
- * 
+ *
  * When a card is added to the selection pile, it is removed from any other pile is was selected from.
  */
 export class SelectionPile extends Pile {

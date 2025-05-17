@@ -68,6 +68,4 @@ export class Move {
 
         this.selection.sourcePile.addCardsReversed(this.selection.cards);
     }
-
-
 }

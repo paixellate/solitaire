@@ -10,13 +10,30 @@ import { Board } from "./board";
 import { History } from "./history/history";
 import { Controls } from "./controls";
 import { Button } from "./ui/button";
-import { createBoardMaterial, createStockPileMaterial, createWastePileMaterial, createTableauPileMaterial, createFoundationPileMaterial, createSelectionPileMaterial } from "../graphics/material/materials";
+import {
+    createBoardMaterial,
+    createStockPileMaterial,
+    createWastePileMaterial,
+    createTableauPileMaterial,
+    createFoundationPileMaterial,
+    createSelectionPileMaterial,
+} from "../graphics/material/materials";
 import { LayoutConfig } from "./ui/layout";
 
 export function createControls(layout: LayoutConfig): Controls {
-    const undoButton = new Button("↶", layout.buttonWidth, layout.buttonHeight, vec3(-layout.buttonWidth - 10, layout.controlsVerticalOffset, 0));
+    const undoButton = new Button(
+        "↶",
+        layout.buttonWidth,
+        layout.buttonHeight,
+        vec3(-layout.buttonWidth - 10, layout.controlsVerticalOffset, 0)
+    );
     const restartButton = new Button("↺", layout.buttonWidth, layout.buttonHeight, vec3(0, layout.controlsVerticalOffset, 0));
-    const newGameButton = new Button("X", layout.buttonWidth, layout.buttonHeight, vec3(layout.buttonWidth + 10, layout.controlsVerticalOffset, 0));
+    const newGameButton = new Button(
+        "X",
+        layout.buttonWidth,
+        layout.buttonHeight,
+        vec3(layout.buttonWidth + 10, layout.controlsVerticalOffset, 0)
+    );
     return new Controls(undoButton, restartButton, newGameButton);
 }
 
@@ -53,17 +70,16 @@ export function createBoard(layout: LayoutConfig, seed: number): Board {
     return board;
 }
 
-
 function createSelectionPile(layout: LayoutConfig): SelectionPile {
     const material = createSelectionPileMaterial();
     const planeGeometry = new THREE.PlaneGeometry(layout.cardWidth, layout.cardHeight);
     return new SelectionPile(
-        0, 
-        planeGeometry, 
-        layout.selectionPilePosition, 
-        layout.stackOffsetFaceUp, 
-        layout.stackOffsetHidden, 
-        material, 
+        0,
+        planeGeometry,
+        layout.selectionPilePosition,
+        layout.stackOffsetFaceUp,
+        layout.stackOffsetHidden,
+        material,
         material
     );
 }

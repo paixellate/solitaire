@@ -5,7 +5,7 @@ import { Rectangle } from "../../graphics/mesh/reactangle";
 
 /**
  * An abstract class that represents a pile of cards.
- * 
+ *
  * Provides numberous utility methods for managing different types of
  * stack of cards that may arise in the game.
  */

@@ -33,7 +33,7 @@ export class Board extends Rectangle {
         tableauPiles: TableauPile[],
         foundationPiles: FoundationPile[],
         selectionPile: SelectionPile,
-        history: History,
+        history: History
     ) {
         super(planeGeometry, material, material);
         this.setLocalPosition(position);
@@ -121,12 +121,9 @@ export class Board extends Rectangle {
         }
     }
 
-
-
     private createSelection(mousePosition: vec2): Selections | null {
         for (const sourcePile of [this.wastePile, ...this.foundationPiles]) {
             if (sourcePile.getIsMouseOver(mousePosition)) {
-
                 if (sourcePile.isEmpty()) {
                     return null;
                 }
@@ -140,7 +137,6 @@ export class Board extends Rectangle {
 
         // clicking on stock pile might mean selecting from waste pile if the stock pile is empty.
         if (this.stockPile.getIsMouseOver(mousePosition)) {
-
             if (this.stockPile.isEmpty() && this.wastePile.isEmpty()) {
                 return null;
             }
@@ -156,18 +152,15 @@ export class Board extends Rectangle {
             const cardPosition = this.stockPile.getTopCardGlobalPosition();
             const card = this.stockPile.popCardOrThrow();
             return new Selections([card], mousePosition, cardPosition, this.stockPile, bounds);
-
         }
 
         for (const tableauPile of this.tableauPiles) {
-
             // for tableau pile, we will first find the card that has been clicked, then select all cards till that card.
             if (tableauPile.getIsMouseOver(mousePosition)) {
-
                 if (tableauPile.isEmpty()) {
                     return null;
                 }
-        
+
                 const card = tableauPile.getMouseOverCard(mousePosition);
                 if (card) {
                     const bounds = tableauPile.getBounds();
@@ -181,7 +174,6 @@ export class Board extends Rectangle {
 
         return null;
     }
-
 
     /**
      * Creates a new move based on the selection and the mouse position.
@@ -199,7 +191,7 @@ export class Board extends Rectangle {
         // in case the card came from stock pile, it is face down and cannot be moved anywhere other than waste pile.
         // this is the only scenario where we pick up a facedown card. In all other cases, we have a face up card.
         if (selectedCards.isSourceStockPile()) {
-            const isDropOverWastePile = (isAuto || this.wastePile.getIsMouseOver(mouseReleasePosition));
+            const isDropOverWastePile = isAuto || this.wastePile.getIsMouseOver(mouseReleasePosition);
             if (isDropOverWastePile) {
                 return new Move(selectedCards, this.wastePile);
             }
@@ -227,18 +219,13 @@ export class Board extends Rectangle {
 
         // handle single card selection cases, except for single cards selected from tableau piles
         if (selectedCards.isSingleCard()) {
-
-
             // A single face up card can only be dropped onto the foundation or tableau pile.
             // handle dropping on the foundation pile first. Dropping on the tableau pile case
-            // can be combined with dropping multiple cards on a tableau pile and so it is handled 
+            // can be combined with dropping multiple cards on a tableau pile and so it is handled
             // outside the isSingleCard() check.
             if (!selectedCards.isSourceFoundationPile()) {
-
                 for (const foundationPile of this.foundationPiles) {
-
                     if (foundationPile.canAddCard(selectedCards.cards[0])) {
-
                         const isDropOverFoundationPile = isAuto || foundationPile.getIsMouseOver(mouseReleasePosition);
                         if (isDropOverFoundationPile) {
                             return new Move(selectedCards, foundationPile);
@@ -246,12 +233,11 @@ export class Board extends Rectangle {
                     }
                 }
             }
-        } 
+        }
 
         // Handle the case where we have selected multiple cards from a tableau, which can only be dropped on another tableau pile.
         // Also handle the single card case that could not be dropped on the foundation pile.
         for (const tableauPile of this.tableauPiles) {
-
             if (tableauPile === selectedCards.sourcePile) {
                 continue;
             }
@@ -262,11 +248,9 @@ export class Board extends Rectangle {
                     return new Move(selectedCards, tableauPile);
                 }
             }
-
         }
 
         // Drop cards on the same pile they were selected from
         return new Move(selectedCards, selectedCards.sourcePile);
     }
-
 }

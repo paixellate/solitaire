@@ -68,7 +68,6 @@ export function createCardTexture(rank: Rank, suit: Suit, width: number, height:
         ctx.font = `bold 24px Arial`;
     }
 
-
     // Draw rank and suit in top left
     ctx.fillText(rank + suit, textOffset, textOffset);
 

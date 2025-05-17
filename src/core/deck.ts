@@ -35,19 +35,19 @@ export class Deck {
 
     private shuffleCards(array: Card[], seed: number): Card[] {
         let currentSeed = seed;
-        
+
         // Simple deterministic PRNG function
         const nextSeed = () => {
             currentSeed = (currentSeed * 9301 + 49297) % 233280;
             return currentSeed / 233280;
         };
-        
+
         // Fisher-Yates shuffle with seeded randomness
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(nextSeed() * (i + 1));
             [array[i], array[j]] = [array[j], array[i]];
         }
-        
+
         return array;
     }
 }
