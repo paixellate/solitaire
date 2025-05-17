@@ -1,9 +1,9 @@
-import { Card } from "./card";
-import { Suit } from "./suit";
-import { Rank } from "./rank";
-import { vec3 } from "../../vector";
+import { Card } from "./cards/card";
+import { Suit } from "./cards/suit";
+import { Rank } from "./cards/rank";
+import { vec3 } from "../graphics/vector";
 import * as THREE from "three";
-import { createCardBackMaterial, createCardMaterial } from "../../material/materials";
+import { createCardBackMaterial, createCardMaterial } from "../graphics/material/materials";
 
 export class Deck {
     private cards: Card[];

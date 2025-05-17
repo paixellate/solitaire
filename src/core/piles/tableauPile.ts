@@ -1,13 +1,11 @@
-import { Card } from "../../cards/card";
-import { getRankValue, Rank } from "../../cards/rank";
-import { Pile } from "../pile";
-import { isOppositeColor } from "../../cards/suit";
-import { vec2, vec3 } from "../../../vector";
-import { Selections } from "../../rules/selection";
-import { InteractivePile } from "../interactivePile";
+import { Card } from "../cards/card";
+import { getRankValue, Rank } from "../cards/rank";
+import { Pile } from "./pile";
+import { isOppositeColor } from "../cards/suit";
+import { vec2, vec3 } from "../../graphics/vector";
 import * as THREE from "three";
 
-export class TableauPile extends Pile implements InteractivePile {
+export class TableauPile extends Pile {
     constructor(
         index: number,
         planeGeometry: THREE.PlaneGeometry,
@@ -31,8 +29,8 @@ export class TableauPile extends Pile implements InteractivePile {
         }
     }
 
-    private getMouseOverCard(mousePosition: vec2): Card | null {
-        const mouseOverCards = this.getFaceUpCards()
+    public getMouseOverCard(mousePosition: vec2): Card | null {
+        const mouseOverCards = [...this.getFaceUpCards()]
             .filter((card) => card.getIsMouseOver(mousePosition))
             .sort((a, b) => b.getGlobalPosition().z - a.getGlobalPosition().z);
 
@@ -42,17 +40,4 @@ export class TableauPile extends Pile implements InteractivePile {
         return null;
     }
 
-    public popSelectedCards(mousePosition: vec2): Selections | null {
-        if (this.isEmpty()) {
-            return null;
-        }
-
-        const card = this.getMouseOverCard(mousePosition);
-        if (card) {
-            const cardPosition = card.getGlobalPosition();
-            const cards = this.popCardsTill(card);
-            return new Selections(cards, mousePosition, cardPosition, this);
-        }
-        return null;
-    }
 }

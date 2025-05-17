@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { vec2 } from "./vector";
+import { vec2 } from "./graphics/vector";
 
 export class Mouse {
     public position: vec2 = vec2(0, 0);

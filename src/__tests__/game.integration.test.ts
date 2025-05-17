@@ -1,17 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import * as THREE from "three";
 import { Input } from "../input";
-import { Selections } from "../core/rules/selection";
-import { vec2, vec3 } from "../vector";
+import { vec3 } from "../graphics/vector";    
 import { Board } from "../core/board";
 import { getRankValue, Rank } from "../core/cards/rank";
-import { Controls } from "../core/ui/controls";
+import { Controls } from "../core/controls";
 import { isOppositeColor, Suit } from "../core/cards/suit";
-import { TableauPile } from "../core/piles/concrete/tableauPile";
-import { Game } from "../core/game";
+import { TableauPile } from "../core/piles/tableauPile";
+import { Game } from "../game";
 import { Button } from "../core/ui/button";
 import { createBoard } from "../core/setup";
-import { getDefaultLayout, LayoutConfig } from "../core/layout";
+import { getDefaultLayout, LayoutConfig } from "../core/ui/layout";
 
 // Create minimal mocks for THREE.js objects we need to control
 vi.mock("three", async () => {
@@ -32,7 +31,7 @@ vi.mock("three", async () => {
 });
 
 // Mock TextureCache to avoid loading real textures
-vi.mock("../texture/textureCache", () => {
+vi.mock("../graphics/texture/textureCache", () => {
     return {
         TextureCache: {
             getInstance: vi.fn().mockReturnValue({
@@ -45,7 +44,7 @@ vi.mock("../texture/textureCache", () => {
 });
 
 // Mock MaterialCache but preserve its behavior
-vi.mock("../texture/materialCache", () => {
+vi.mock("../graphics/texture/materialCache", () => {
     const mockMaterial = {
         side: 0,
         transparent: false,
@@ -170,12 +169,12 @@ describe("Board", () => {
         // Verify selection was set
         expect(actualSelection).not.toBeNull();
         expect(actualSelection).toBe(board.selection);
-        expect(actualSelection?.mousePosition?.x).toBeCloseTo(324.705);
-        expect(actualSelection?.mousePosition?.y).toBeCloseTo(304);
-        expect(actualSelection?.cardPosition?.x).toBeCloseTo(327.005);
-        expect(actualSelection?.cardPosition?.y).toBeCloseTo(299.40);
-        expect(actualSelection?.cardPosition?.z).toBeCloseTo(23);
-        expect(actualSelection?.source).toBe(board.stockPile);
+        expect(actualSelection?.sourceMousePosition?.x).toBeCloseTo(324.705);
+        expect(actualSelection?.sourceMousePosition?.y).toBeCloseTo(304);
+        expect(actualSelection?.selectedCardPosition?.x).toBeCloseTo(327.005);
+        expect(actualSelection?.selectedCardPosition?.y).toBeCloseTo(299.40);
+        expect(actualSelection?.selectedCardPosition?.z).toBeCloseTo(23);
+        expect(actualSelection?.sourcePile).toBe(board.stockPile);
         expect(actualSelection?.cards.length).toEqual(1);
 
         // Verify the properties of the first card in the selection
@@ -1152,4 +1151,5 @@ describe("Board", () => {
         expect(board.selection).toBeNull();
         expect(board.history.getNumberOfMoves()).toBe(0);
     });
+
 });

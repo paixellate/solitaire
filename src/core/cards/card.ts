@@ -1,7 +1,7 @@
-import { vec3 } from "../../vector";
+import { vec3 } from "../../graphics/vector";
 import { Rank } from "./rank";
 import { Suit } from "./suit";
-import { Rectangle } from "../../mesh/reactangle";
+import { Rectangle } from "../../graphics/mesh/reactangle";
 import * as THREE from "three";
 
 export class Card extends Rectangle {

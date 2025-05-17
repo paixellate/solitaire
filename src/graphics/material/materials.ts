@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { MaterialCache } from "../texture/materialCache";
-import { Rank } from "../core/cards/rank";
-import { Suit } from "../core/cards/suit";
+import { Rank } from "../../core/cards/rank";
+import { Suit } from "../../core/cards/suit";
 
 const BOARD_COLOR = "#060";
 const PILE_BACKGROUND_COLOR = "#040";

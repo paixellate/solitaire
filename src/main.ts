@@ -1,20 +1,20 @@
 import * as THREE from "three";
-import { Game } from "./core/game";
+import { Game } from "./game";
 import { Input } from "./input";
 import Stats from "stats.js";
 import { createBoard } from "./core/setup";
 import { createControls } from "./core/setup";
-import { getDefaultLayout } from "./core/layout";
+import { getDefaultLayout } from "./core/ui/layout";
 
-// const stats = new Stats();
+const stats = new Stats();
 // the number will decide which information will be displayed
 // 0 => FPS Frames rendered in the last second. The higher the number the better.
 // 1 => MS Milliseconds needed to render a frame. The lower the number the better.
 // 2 => MB MBytes of allocated memory. (Run Chrome with --enable-precise-memory-info)
 // 3 => CUSTOM User-defined panel support.
-// stats.showPanel(0);
+stats.showPanel(0);
 
-// document.body.appendChild(stats.dom);
+document.body.appendChild(stats.dom);
 
 const renderer = new THREE.WebGLRenderer();
 document.body.appendChild(renderer.domElement);
@@ -108,11 +108,11 @@ game.addToScene(scene);
 function animate() {
     requestAnimationFrame(animate);
 
-    // stats.begin();
+    stats.begin();
     game.mainLoop(input);
 
     renderer.render(scene, camera);
-    // stats.end();
+    stats.end();
 }
 
 onWindowResize();

@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { TextureCache } from "./textureCache";
-import { Rank } from "../core/cards/rank";
-import { Suit } from "../core/cards/suit";
+import { Rank } from "../../core/cards/rank";
+import { Suit } from "../../core/cards/suit";
 
 export class MaterialCache {
     private static readonly instance: MaterialCache = new MaterialCache();

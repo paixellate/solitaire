@@ -30,11 +30,23 @@ export class Rectangle extends GameObject {
         this.meshGroup.rotation.y = rotation;
     }
 
-    public getIsMouseOver(mousePosition: vec2): boolean {
+    private getLocalIsMouseOver(mousePosition: vec2): boolean {
         const position = this.getGlobalPosition();
         this.planeGeometry.computeBoundingBox();
         const box = this.planeGeometry.boundingBox!;
         return box.containsPoint(vec3(mousePosition.x - position.x, mousePosition.y - position.y, 0));
+    }
+
+    public getIsMouseOver(mousePosition: vec2): boolean {
+        const objectBox = new THREE.Box3().setFromObject(this.getObject());
+        const isGlobalOver = objectBox.containsPoint(vec3(mousePosition.x, mousePosition.y, 0));
+        const isLocalOver = this.getLocalIsMouseOver(mousePosition);
+        const isMouseOverResult = isGlobalOver || isLocalOver;
+        return isMouseOverResult;
+    }
+
+    public getBounds(): THREE.Box3 {
+        return new THREE.Box3().setFromObject(this.getObject());
     }
 
     public setFrontMaterials(material: THREE.Material): void {

@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { Input } from "../input";
-import { Board } from "./board";
-import { Controls } from "./ui/controls";
+import { Input } from "./input";
+import { Board } from "./core/board";
+import { Controls } from "./core/controls";
 
 export class Game {
     private readonly board: Board;

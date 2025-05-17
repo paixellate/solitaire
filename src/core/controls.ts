@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { Button } from "./button";
-import { Input } from "../../input";
+import { Button } from "./ui/button";
+import { Input } from "../input";
 
 export enum Action {
     None,

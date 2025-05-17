@@ -1,4 +1,4 @@
-import { Move } from "./rules/move";
+import { Move } from "./move";
 
 export class History {
     private readonly seed: number;

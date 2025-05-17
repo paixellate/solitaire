@@ -1,18 +1,17 @@
-import { MaterialCache } from "../texture/materialCache";
-import { StockPile } from "./piles/concrete/stockPile";
-import { TableauPile } from "./piles/concrete/tableauPile";
-import { WastePile } from "./piles/concrete/wastePile";
-import { SelectionPile } from "./piles/selectionPile";
+import { StockPile } from "./piles/stockPile";
+import { TableauPile } from "./piles/tableauPile";
+import { WastePile } from "./piles/wastePile";
+import { SelectionPile } from "./selection/selectionPile";
 import * as THREE from "three";
-import { vec3 } from "../vector";
-import { FoundationPile } from "./piles/concrete/foundationPile";
-import { Deck } from "./cards/deck";
+import { vec3 } from "../graphics/vector";
+import { FoundationPile } from "./piles/foundationPile";
+import { Deck } from "./deck";
 import { Board } from "./board";
-import { History } from "./history";
-import { Controls } from "./ui/controls";
+import { History } from "./history/history";
+import { Controls } from "./controls";
 import { Button } from "./ui/button";
-import { createBoardMaterial, createStockPileMaterial, createWastePileMaterial, createTableauPileMaterial, createFoundationPileMaterial, createSelectionPileMaterial } from "../material/materials";
-import { LayoutConfig } from "./layout";
+import { createBoardMaterial, createStockPileMaterial, createWastePileMaterial, createTableauPileMaterial, createFoundationPileMaterial, createSelectionPileMaterial } from "../graphics/material/materials";
+import { LayoutConfig } from "./ui/layout";
 
 export function createControls(layout: LayoutConfig): Controls {
     const undoButton = new Button("↶", layout.buttonWidth, layout.buttonHeight, vec3(-layout.buttonWidth - 10, layout.controlsVerticalOffset, 0));
@@ -27,10 +26,11 @@ export function createBoard(layout: LayoutConfig, seed: number): Board {
     const material = createBoardMaterial();
     const deck = new Deck(layout.cardWidth, layout.cardHeight);
     const wastePile = createWastePile(layout);
-    const stockPile = createStockPile(layout, wastePile);
+    const stockPile = createStockPile(layout);
     const tableauPiles = createTableauPiles(layout);
     const foundationPiles = createFoundationPiles(layout);
     const selectionPile = createSelectionPile(layout);
+
     const board = new Board(
         planeGeometry,
         layout.boardPosition,
@@ -43,6 +43,7 @@ export function createBoard(layout: LayoutConfig, seed: number): Board {
         selectionPile,
         history
     );
+
     wastePile.addToObject(board);
     stockPile.addToObject(board);
     tableauPiles.forEach((pile) => pile.addToObject(board));
@@ -67,7 +68,7 @@ function createSelectionPile(layout: LayoutConfig): SelectionPile {
     );
 }
 
-function createStockPile(layout: LayoutConfig, wastePile: WastePile): StockPile {
+function createStockPile(layout: LayoutConfig): StockPile {
     const materialFront = createStockPileMaterial(layout.cardWidth, layout.cardHeight);
     const materialBack = materialFront;
     const planeGeometry = new THREE.PlaneGeometry(layout.cardWidth, layout.cardHeight);
@@ -78,8 +79,7 @@ function createStockPile(layout: LayoutConfig, wastePile: WastePile): StockPile 
         layout.stackOffsetFaceUp,
         layout.stackOffsetHidden,
         materialFront,
-        materialBack,
-        wastePile
+        materialBack
     );
 }
 

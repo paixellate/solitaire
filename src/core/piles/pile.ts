@@ -1,8 +1,14 @@
 import * as THREE from "three";
 import { Card } from "../cards/card";
-import { vec2, vec3 } from "../../vector";
-import { Rectangle } from "../../mesh/reactangle";
+import { vec2, vec3 } from "../../graphics/vector";
+import { Rectangle } from "../../graphics/mesh/reactangle";
 
+/**
+ * An abstract class that represents a pile of cards.
+ * 
+ * Provides numberous utility methods for managing different types of
+ * stack of cards that may arise in the game.
+ */
 export abstract class Pile extends Rectangle {
     private readonly name: string = this.constructor.name;
     private readonly cards: Card[] = [];

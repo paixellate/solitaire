@@ -1,9 +1,7 @@
-import { vec2 } from "../../vector";
-import { Board } from "../board";
+import { Selections } from "../selection/selection";
 import { Pile } from "../piles/pile";
-import { WastePile } from "../piles/concrete/wastePile";
-import { StockPile } from "../piles/concrete/stockPile";
-import { Selections } from "./selection";
+import { WastePile } from "../piles/wastePile";
+import { StockPile } from "../piles/stockPile";
 
 export class Move {
     private readonly selection: Selections;
@@ -16,15 +14,15 @@ export class Move {
     }
 
     public execute(): boolean {
-        if (this.destination === this.selection.source) {
+        if (this.destination === this.selection.sourcePile) {
             this.destination.addCardsReversed(this.selection.cards);
             return false;
         }
 
         if (this.selection.isSourceTableauPile()) {
             this.destination.addCardsReversed(this.selection.cards);
-            if (!this.selection.source.isEmpty()) {
-                const card = this.selection.source.getTopCardOrThrow();
+            if (!this.selection.sourcePile.isEmpty()) {
+                const card = this.selection.sourcePile.getTopCardOrThrow();
                 if (!card.isFaceUp) {
                     card.makeFaceUp();
                     this.didFlipCard = true;
@@ -50,13 +48,13 @@ export class Move {
         }
 
         if (this.selection.isSourceTableauPile()) {
-            if (!this.selection.source.isEmpty()) {
-                const card = this.selection.source.getTopCardOrThrow();
+            if (!this.selection.sourcePile.isEmpty()) {
+                const card = this.selection.sourcePile.getTopCardOrThrow();
                 if (this.didFlipCard) {
                     card.makeFaceDown();
                 }
             }
-            this.selection.source.addCardsReversed(this.selection.cards);
+            this.selection.sourcePile.addCardsReversed(this.selection.cards);
             return;
         }
 
@@ -68,7 +66,7 @@ export class Move {
             this.selection.cards.forEach((card) => card.makeFaceDown());
         }
 
-        this.selection.source.addCardsReversed(this.selection.cards);
+        this.selection.sourcePile.addCardsReversed(this.selection.cards);
     }
 
 

@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { createCardBackTexture, createCardTexture } from "./card";
-import { Suit } from "../core/cards/suit";
-import { Rank } from "../core/cards/rank";
+import { Suit } from "../../core/cards/suit";
+import { Rank } from "../../core/cards/rank";
 import { createButtonTexture } from "./button";
 import { createPileTexture } from "./pile";
 

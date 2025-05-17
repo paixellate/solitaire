@@ -1,4 +1,4 @@
-import { vec2, vec3 } from "../vector";
+import { vec2, vec3 } from "../../graphics/vector";
 
 export interface LayoutConfig {
   stackOffsetFaceUp: vec2;

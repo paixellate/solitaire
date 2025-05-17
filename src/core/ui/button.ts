@@ -1,8 +1,8 @@
 import * as THREE from "three";
-import { Rectangle } from "../../mesh/reactangle";
-import { vec3 } from "../../vector";
+import { Rectangle } from "../../graphics/mesh/reactangle";
+import { vec3 } from "../../graphics/vector";
 import { Input } from "../../input";
-import { createButtonMaterial, createButtonMaterialOver, createButtonMaterialDown } from "../../material/materials";
+import { createButtonMaterial, createButtonMaterialOver, createButtonMaterialDown } from "../../graphics/material/materials";
 export class Button extends Rectangle {
     private material: THREE.Material;
     private materialOver: THREE.Material;

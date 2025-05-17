@@ -1,17 +1,17 @@
-import { vec2, vec3 } from "../vector";
-import { TableauPile } from "./piles/concrete/tableauPile";
-import { WastePile } from "./piles/concrete/wastePile";
-import { StockPile } from "./piles/concrete/stockPile";
-import { FoundationPile } from "./piles/concrete/foundationPile";
+import { vec2, vec3 } from "../graphics/vector";
+import { TableauPile } from "./piles/tableauPile";
+import { WastePile } from "./piles/wastePile";
+import { StockPile } from "./piles/stockPile";
+import { FoundationPile } from "./piles/foundationPile";
 import * as THREE from "three";
-import { Rectangle } from "../mesh/reactangle";
-import { SelectionPile } from "./piles/selectionPile";
-import { Move } from "./rules/move";
+import { Rectangle } from "../graphics/mesh/reactangle";
+import { SelectionPile } from "./selection/selectionPile";
+import { Move } from "./history/move";
 import { Input } from "../input";
-import { Selections } from "./rules/selection";
-import { History } from "./history";
-import { Action } from "./ui/controls";
-import { Deck } from "./cards/deck";
+import { Selections } from "./selection/selection";
+import { History } from "./history/history";
+import { Action } from "./controls";
+import { Deck } from "./deck";
 
 export class Board extends Rectangle {
     public readonly deck: Deck;
@@ -124,10 +124,58 @@ export class Board extends Rectangle {
 
 
     private createSelection(mousePosition: vec2): Selections | null {
-        for (const sourcePile of [this.wastePile, this.stockPile, ...this.foundationPiles, ...this.tableauPiles]) {
-            const selections = sourcePile.popSelectedCards(mousePosition);
-            if (selections) {
-                return selections;
+        for (const sourcePile of [this.wastePile, ...this.foundationPiles]) {
+            if (sourcePile.getIsMouseOver(mousePosition)) {
+
+                if (sourcePile.isEmpty()) {
+                    return null;
+                }
+
+                const bounds = sourcePile.getBounds();
+                const cardPosition = sourcePile.getTopCardGlobalPosition();
+                const card = sourcePile.popCardOrThrow();
+                return new Selections([card], mousePosition, cardPosition, sourcePile, bounds);
+            }
+        }
+
+        // clicking on stock pile might mean selecting from waste pile if the stock pile is empty.
+        if (this.stockPile.getIsMouseOver(mousePosition)) {
+
+            if (this.stockPile.isEmpty() && this.wastePile.isEmpty()) {
+                return null;
+            }
+
+            if (this.stockPile.isEmpty()) {
+                const bounds = this.wastePile.getBounds();
+                const cardPosition = this.stockPile.getGlobalPosition();
+                const cards = this.wastePile.popAllCards();
+                return new Selections(cards, mousePosition, cardPosition, this.wastePile, bounds);
+            }
+
+            const bounds = this.stockPile.getBounds();
+            const cardPosition = this.stockPile.getTopCardGlobalPosition();
+            const card = this.stockPile.popCardOrThrow();
+            return new Selections([card], mousePosition, cardPosition, this.stockPile, bounds);
+
+        }
+
+        for (const tableauPile of this.tableauPiles) {
+
+            // for tableau pile, we will first find the card that has been clicked, then select all cards till that card.
+            if (tableauPile.getIsMouseOver(mousePosition)) {
+
+                if (tableauPile.isEmpty()) {
+                    return null;
+                }
+        
+                const card = tableauPile.getMouseOverCard(mousePosition);
+                if (card) {
+                    const bounds = tableauPile.getBounds();
+                    const cardPosition = card.getGlobalPosition();
+                    const cards = tableauPile.popCardsTill(card);
+                    return new Selections(cards, mousePosition, cardPosition, tableauPile, bounds);
+                }
+                return null;
             }
         }
 
@@ -146,21 +194,40 @@ export class Board extends Rectangle {
      * @returns A new move.
      */
     private createMove(selectedCards: Selections, mouseReleasePosition: vec2): Move {
-        const isAuto = selectedCards.source.getIsMouseOver(mouseReleasePosition);
+        const isAuto = selectedCards.isMouseOverSource(mouseReleasePosition);
+
+        // in case the card came from stock pile, it is face down and cannot be moved anywhere other than waste pile.
+        // this is the only scenario where we pick up a facedown card. In all other cases, we have a face up card.
+        if (selectedCards.isSourceStockPile()) {
+            const isDropOverWastePile = (isAuto || this.wastePile.getIsMouseOver(mouseReleasePosition));
+            if (isDropOverWastePile) {
+                return new Move(selectedCards, this.wastePile);
+            }
+            return new Move(selectedCards, selectedCards.sourcePile);
+        }
+
+        // handle the case where we need to move all cards from waste onto stock pile.
+        // This case is slightly odd because we click on stock, but the destination is still stock.
+        // The createSelection method currently handles popping cards from the waste pile on selection.
+        // So if this is an appropriate filp over case, then waste pile will be empty, because
+        // all its cards have been moved to selectionPile.
+        if (selectedCards.isSourceWastePile()) {
+            const isDropOverStockPile = this.stockPile.getIsMouseOver(mouseReleasePosition);
+            const isFlipOver = this.stockPile.getIsMouseOver(selectedCards.sourceMousePosition);
+            if (isFlipOver) {
+                if (isDropOverStockPile) {
+                    return new Move(selectedCards, this.stockPile);
+                } else {
+                    // If we didn't drop over stock pile, then end processing, we can only move them back to the waste pile.
+                    // Dropping anywhere else is incorrect.
+                    return new Move(selectedCards, selectedCards.sourcePile);
+                }
+            }
+        }
 
         // handle single card selection cases, except for single cards selected from tableau piles
         if (selectedCards.isSingleCard()) {
 
-
-            // in case the card came from stock pile, it is face down and cannot be moved anywhere other than waste pile.
-            // this is the only scenario where we pick up a facedown card. In all other cases, we have a face up card.
-            if (selectedCards.isSourceStockPile()) {
-                const isDropOverWastePile = (isAuto || this.wastePile.getIsMouseOver(mouseReleasePosition));
-                if (isDropOverWastePile) {
-                    return new Move(selectedCards, this.wastePile);
-                }
-                return new Move(selectedCards, selectedCards.source);
-            }
 
             // A single face up card can only be dropped onto the foundation or tableau pile.
             // handle dropping on the foundation pile first. Dropping on the tableau pile case
@@ -181,27 +248,15 @@ export class Board extends Rectangle {
             }
         } 
 
-        // handle the case where we need to move all cards from waste onto stock pile.
-        // This case is slightly odd because we click on stock, but the destination is still stock.
-        // The stockPile.ts currently handles popping cards from the waste pile on selection.
-        // So if this is an appropriate filp over case, then waste pile will be empty, because
-        // all its cards have been moved to selectionPile.
-        if (selectedCards.isSourceWastePile() && (this.stockPile.getIsMouseOver(mouseReleasePosition))) {
-            if (this.stockPile.isEmpty() && this.wastePile.isEmpty()) {
-                return new Move(selectedCards, this.stockPile);
-            }
-        }
-
         // Handle the case where we have selected multiple cards from a tableau, which can only be dropped on another tableau pile.
         // Also handle the single card case that could not be dropped on the foundation pile.
         for (const tableauPile of this.tableauPiles) {
 
-            if (tableauPile === selectedCards.source) {
+            if (tableauPile === selectedCards.sourcePile) {
                 continue;
             }
 
             if (tableauPile.canAddCard(selectedCards.getTopCard())) {
-
                 const isDropOverTableauPile = isAuto || tableauPile.getIsMouseOver(mouseReleasePosition);
                 if (isDropOverTableauPile) {
                     return new Move(selectedCards, tableauPile);
@@ -211,8 +266,7 @@ export class Board extends Rectangle {
         }
 
         // Drop cards on the same pile they were selected from
-        return new Move(selectedCards, selectedCards.source);
+        return new Move(selectedCards, selectedCards.sourcePile);
     }
-
 
 }
