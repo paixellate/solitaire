@@ -60,7 +60,9 @@ export function createCardTexture(rank: Rank, suit: Suit, width: number, height:
     ctx.fillStyle = suitColorMap["Bold"][getSuitColor(suit)];
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
-    if (width < 70) {
+    if (width < 60) {
+        ctx.font = `bold 18px Arial`;
+    } else if (width < 70) {
         ctx.font = `bold 14px Arial`;
     } else if (width < 80) {
         ctx.font = `bold 18px Arial`;
@@ -71,17 +73,19 @@ export function createCardTexture(rank: Rank, suit: Suit, width: number, height:
     // Draw rank and suit in top left
     ctx.fillText(rank + suit, textOffset, textOffset);
 
-    // Draw in bottom right (upside down)
-    ctx.save();
-    ctx.translate(width - textOffset, height - textOffset);
-    ctx.rotate(Math.PI);
-    ctx.fillText(rank + suit, 0, 0);
-    ctx.restore();
+    if (width > 60) {
+        // Draw in bottom right (upside down)
+        ctx.save();
+        ctx.translate(width - textOffset, height - textOffset);
+        ctx.rotate(Math.PI);
+        ctx.fillText(rank + suit, 0, 0);
+        ctx.restore();
+    }
 
     if (width < 60) {
-        ctx.font = `bold 26px Arial`;
+        ctx.font = `bold 48px Arial`;
     } else if (width < 70) {
-        ctx.font = `bold 32px Arial`;
+        ctx.font = `bold 38px Arial`;
     } else if (width < 80) {
         ctx.font = `bold 48px Arial`;
     } else {
@@ -90,7 +94,12 @@ export function createCardTexture(rank: Rank, suit: Suit, width: number, height:
     // Draw big symbol in center
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(suit, width / 2, height / 2);
+
+    if (width < 60) {
+        ctx.fillText(suit, width * 1/2, height * 3/5);
+    } else {
+        ctx.fillText(suit, width * 1/2, height * 1/2);
+    }
 
     return canvas.toDataURL("image/png");
 }

@@ -37,6 +37,9 @@ export function getDefaultLayout(windowWidth: number, windowHeight: number): Lay
 
         // Card offsets
         get stackOffsetFaceUp() {
+            if (this.cardWidth < 60) {
+                return vec2(0, -this.cardHeight * 0.3);
+            }
             if (this.cardWidth < 70) {
                 return vec2(0, -this.cardHeight * 0.25);
             } else {
