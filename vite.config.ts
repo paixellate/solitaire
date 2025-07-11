@@ -1,8 +1,16 @@
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import { configDefaults } from "vitest/config";
+import zip from "vite-plugin-zip-pack";
 
 export default defineConfig({
-    plugins: [],
+    base: "./",
+    plugins: [
+        zip({
+            inDir: "dist",
+            outDir: "dist",
+            outFileName: "solitaire.zip",
+        }),
+    ],
     test: {
         globals: true,
         coverage: {

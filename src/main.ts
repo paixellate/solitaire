@@ -5,16 +5,16 @@ import Stats from "stats.js";
 import { createBoard } from "./core/setup";
 import { createControls } from "./core/setup";
 import { getDefaultLayout } from "./core/ui/layout";
+import { SCENE_BACKGROUND_COLOR, AMBIENT_LIGHT_COLOR, AMBIENT_LIGHT_INTENSITY } from "./graphics/material/materials";
 
-const stats = new Stats();
-// the number will decide which information will be displayed
-// 0 => FPS Frames rendered in the last second. The higher the number the better.
-// 1 => MS Milliseconds needed to render a frame. The lower the number the better.
-// 2 => MB MBytes of allocated memory. (Run Chrome with --enable-precise-memory-info)
-// 3 => CUSTOM User-defined panel support.
-stats.showPanel(0);
-
-document.body.appendChild(stats.dom);
+// const stats = new Stats();
+// // the number will decide which information will be displayed
+// // 0 => FPS Frames rendered in the last second. The higher the number the better.
+// // 1 => MS Milliseconds needed to render a frame. The lower the number the better.
+// // 2 => MB MBytes of allocated memory. (Run Chrome with --enable-precise-memory-info)
+// // 3 => CUSTOM User-defined panel support.
+// stats.showPanel(0);
+// document.body.appendChild(stats.dom);
 
 const renderer = new THREE.WebGLRenderer();
 document.body.appendChild(renderer.domElement);
@@ -109,7 +109,8 @@ window.addEventListener(
 );
 
 const scene = new THREE.Scene();
-const ambientLight = new THREE.AmbientLight(0xffffff, 2.5);
+scene.background = new THREE.Color(SCENE_BACKGROUND_COLOR);
+const ambientLight = new THREE.AmbientLight(AMBIENT_LIGHT_COLOR, AMBIENT_LIGHT_INTENSITY);
 scene.add(ambientLight);
 const layout = getDefaultLayout(window.innerWidth, window.innerHeight);
 const game = new Game(createBoard(layout, -1), createControls(layout));
@@ -118,11 +119,11 @@ game.addToScene(scene);
 function animate() {
     requestAnimationFrame(animate);
 
-    stats.begin();
+    // stats.begin();
     game.mainLoop(input);
 
     renderer.render(scene, camera);
-    stats.end();
+    // stats.end();
 }
 
 onWindowResize();

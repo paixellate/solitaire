@@ -3,9 +3,12 @@ import { MaterialCache } from "../texture/materialCache";
 import { Rank } from "../../core/cards/rank";
 import { Suit } from "../../core/cards/suit";
 
-const BOARD_COLOR = "#060";
-const PILE_BACKGROUND_COLOR = "#040";
-const PILE_SYMBOL_COLOR = "#030";
+const BOARD_COLOR = "#363";
+const PILE_BACKGROUND_COLOR = "#343";
+const PILE_SYMBOL_COLOR = "#232";
+export const SCENE_BACKGROUND_COLOR = 0x223322;
+export const AMBIENT_LIGHT_COLOR = 0xffffff;
+export const AMBIENT_LIGHT_INTENSITY = 2.5;
 
 const BUTTON_COLOR = "#333";
 const BUTTON_COLOR_OVER = "#666";
