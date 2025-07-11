@@ -113,7 +113,8 @@ scene.background = new THREE.Color(SCENE_BACKGROUND_COLOR);
 const ambientLight = new THREE.AmbientLight(AMBIENT_LIGHT_COLOR, AMBIENT_LIGHT_INTENSITY);
 scene.add(ambientLight);
 const layout = getDefaultLayout(window.innerWidth, window.innerHeight);
-const game = new Game(createBoard(layout, -1), createControls(layout));
+const seed = new Date().getTime();
+const game = new Game(createBoard(layout, seed), createControls(layout));
 game.addToScene(scene);
 
 function animate() {
